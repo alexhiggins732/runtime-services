@@ -14,10 +14,12 @@ namespace System.Runtime.ConversionServices.Tests
     public class ParameterizedConversionTests
     {
         private readonly ITestOutputHelper output;
+
         public ParameterizedConversionTests(ITestOutputHelper output)
         {
             this.output = output;
         }
+
         public class TestTypes
         {
             public const string Default = nameof(Default);
@@ -62,6 +64,7 @@ namespace System.Runtime.ConversionServices.Tests
                     $"Boxed{src.GetType().Name}ToBoxed{typeof(TOut).Name} Failed =>" +
                     $" {nameof(src)}: {src}, {nameof(expected)}:{expected}, {nameof(actual)}:{actual},");
             }
+
             public static void BoxedToGenericTest<TOut>(object src, TOut expected)
             {
                 var actual = src.To<TOut>();
@@ -109,6 +112,7 @@ namespace System.Runtime.ConversionServices.Tests
         }
 
         public interface IConvertTest { void Run(); }
+
         public class ConvertTest<TIn, TOut> : IConvertTest
         {
             TIn Src;
@@ -129,8 +133,6 @@ namespace System.Runtime.ConversionServices.Tests
             }
             public override string ToString() =>
                 $"ConvertTest<{typeof(TIn).Name},{typeof(TOut).Name}> ({nameof(Src)}: {Src}, {nameof(Expected)}: {Expected})";
-
-
         }
 
         public class TestConstants
@@ -140,6 +142,11 @@ namespace System.Runtime.ConversionServices.Tests
                 public const bool Default = default(bool);
                 public const bool Min = default(bool);
                 public const bool Max = true;
+                public class Char
+                {
+                    public const char Default = TestConstants.Char.Default;
+                    public const char Max = (char)1;
+                }
                 public class SByte
                 {
                     public const sbyte Default = 0;
@@ -197,6 +204,85 @@ namespace System.Runtime.ConversionServices.Tests
                 }
             }
 
+            public class Char
+            {
+                public const char Default = default(char);
+                public const char Min = char.MinValue;
+                public const char Max = char.MaxValue;
+                public class Bool
+                {
+                    public const bool Default = TestConstants.Bool.Default;
+                    public const bool Min = TestConstants.Bool.Min;
+                    public const bool Max = TestConstants.Bool.Max;
+                }
+                public class SByte
+                {
+                    public const sbyte Default = (sbyte)Char.Default;
+                    public const sbyte Min = unchecked((sbyte)Char.Min);
+                    public const sbyte Max = unchecked((sbyte)Char.Max);
+                }
+                public class Byte
+                {
+                    public const byte Default = (byte)Char.Default;
+                    public const byte Min = unchecked((byte)Char.Min);
+                    public const byte Max = unchecked((byte)Char.Max);
+                }
+                public class Short
+                {
+                    public const short Default = (short)Char.Default;
+                    public const short Min = unchecked((short)Char.Min);
+                    public const short Max = unchecked((short)Char.Max);
+                }
+                public class UShort
+                {
+                    public const ushort Default = (ushort)Char.Default;
+                    public const ushort Min = (ushort)Char.Min;
+                    public const ushort Max = (ushort)Char.Max;
+                }
+                public class Int
+                {
+                    public const int Default = (int)Char.Default;
+                    public const int Min = (int)Char.Min;
+                    public const int Max = (int)Char.Max;
+                }
+                public class UInt
+                {
+                    public const uint Default = (uint)Char.Default;
+                    public const uint Min = (uint)Char.Min;
+                    public const uint Max = (uint)Char.Max;
+                }
+                public class Long
+                {
+                    public const long Default = (long)Char.Default;
+                    public const long Min = (long)Char.Min;
+                    public const long Max = (long)Char.Max;
+                }
+                public class ULong
+                {
+                    public const ulong Default = (ulong)Char.Default;
+                    public const ulong Min = (ulong)Char.Min;
+                    public const ulong Max = (ulong)Char.Max;
+                }
+                public class Float
+                {
+                    public const float Default = (float)Char.Default;
+                    public const float Min = (float)Char.Min;
+                    public const float Max = (float)Char.Max;
+                }
+                public class Double
+                {
+                    public const double Default = (double)Char.Default;
+                    public const double Min = (double)Char.Min;
+                    public const double Max = (double)Char.Max;
+                }
+                public class Decimal
+                {
+                    public const decimal Default = (decimal)Char.Default;
+                    public const decimal Min = (decimal)Char.Min;
+                    public const decimal Max = (decimal)Char.Max;
+                }
+            }
+
             public class SByte
             {
                 public const sbyte Default = default(sbyte);
@@ -207,6 +293,12 @@ namespace System.Runtime.ConversionServices.Tests
                     public const bool Default = TestConstants.Bool.Default;
                     public const bool Min = TestConstants.Bool.Max;
                     public const bool Max = TestConstants.Bool.Max;
+                }
+                public class Char
+                {
+                    public const char Default = (char)SByte.Default;
+                    public const char Min = unchecked((char)SByte.Min);
+                    public const char Max = (char)SByte.Max;
                 }
                 public class Byte
                 {
@@ -281,6 +373,12 @@ namespace System.Runtime.ConversionServices.Tests
                     public const bool Min = TestConstants.Bool.Min;
                     public const bool Max = TestConstants.Bool.Max;
                 }
+                public class Char
+                {
+                    public const char Default = (char)Byte.Default;
+                    public const char Min = unchecked((char)Byte.Min);
+                    public const char Max = (char)Byte.Max;
+                }
                 public class SByte
                 {
                     public const sbyte Default = (sbyte)Byte.Default;
@@ -353,6 +451,12 @@ namespace System.Runtime.ConversionServices.Tests
                     public const bool Default = TestConstants.Bool.Default;
                     public const bool Min = TestConstants.Bool.Max;
                     public const bool Max = TestConstants.Bool.Max;
+                }
+                public class Char
+                {
+                    public const char Default = (char)Short.Default;
+                    public const char Min = unchecked((char)Short.Min);
+                    public const char Max = (char)Short.Max;
                 }
                 public class Byte
                 {
@@ -427,6 +531,12 @@ namespace System.Runtime.ConversionServices.Tests
                     public const bool Min = TestConstants.Bool.Min;
                     public const bool Max = TestConstants.Bool.Max;
                 }
+                public class Char
+                {
+                    public const char Default = (char)UShort.Default;
+                    public const char Min = unchecked((char)UShort.Min);
+                    public const char Max = (char)UShort.Max;
+                }
                 public class SByte
                 {
                     public const sbyte Default = (sbyte)UShort.Default;
@@ -499,6 +609,12 @@ namespace System.Runtime.ConversionServices.Tests
                     public const bool Default = TestConstants.Bool.Default;
                     public const bool Min = TestConstants.Bool.Max;
                     public const bool Max = TestConstants.Bool.Max;
+                }
+                public class Char
+                {
+                    public const char Default = (char)Int.Default;
+                    public const char Min = unchecked((char)Int.Min);
+                    public const char Max = unchecked((char)Int.Max);
                 }
                 public class Byte
                 {
@@ -573,6 +689,12 @@ namespace System.Runtime.ConversionServices.Tests
                     public const bool Min = TestConstants.Bool.Min;
                     public const bool Max = TestConstants.Bool.Max;
                 }
+                public class Char
+                {
+                    public const char Default = (char)UInt.Default;
+                    public const char Min = unchecked((char)UInt.Min);
+                    public const char Max = unchecked((char)UInt.Max);
+                }
                 public class SByte
                 {
                     public const sbyte Default = (sbyte)UInt.Default;
@@ -645,6 +767,12 @@ namespace System.Runtime.ConversionServices.Tests
                     public const bool Default = TestConstants.Bool.Default;
                     public const bool Min = TestConstants.Bool.Max;
                     public const bool Max = TestConstants.Bool.Max;
+                }
+                public class Char
+                {
+                    public const char Default = (char)Long.Default;
+                    public const char Min = unchecked((char)Long.Min);
+                    public const char Max = unchecked((char)Long.Max);
                 }
                 public class Byte
                 {
@@ -719,6 +847,12 @@ namespace System.Runtime.ConversionServices.Tests
                     public const bool Min = TestConstants.Bool.Min;
                     public const bool Max = TestConstants.Bool.Max;
                 }
+                public class Char
+                {
+                    public const char Default = (char)ULong.Default;
+                    public const char Min = unchecked((char)ULong.Min);
+                    public const char Max = unchecked((char)ULong.Max);
+                }
                 public class SByte
                 {
                     public const sbyte Default = (sbyte)ULong.Default;
@@ -791,6 +925,12 @@ namespace System.Runtime.ConversionServices.Tests
                     public const bool Default = TestConstants.Bool.Default;
                     public const bool Min = TestConstants.Bool.Max;
                     public const bool Max = TestConstants.Bool.Max;
+                }
+                public class Char
+                {
+                    public const char Default = (char)Float.Default;
+                    public const char Min = unchecked((char)Float.Min);
+                    public const char Max = unchecked((char)Float.Max);
                 }
                 public class Byte
                 {
@@ -865,6 +1005,12 @@ namespace System.Runtime.ConversionServices.Tests
                     public const bool Default = TestConstants.Bool.Default;
                     public const bool Min = TestConstants.Bool.Max;
                     public const bool Max = TestConstants.Bool.Max;
+                }
+                public class Char
+                {
+                    public const char Default = (char)Double.Default;
+                    public const char Min = unchecked((char)Double.Min);
+                    public const char Max = unchecked((char)Double.Max);
                 }
                 public class Byte
                 {
@@ -949,6 +1095,14 @@ namespace System.Runtime.ConversionServices.Tests
                     //TODO: Assert Throws
                     //public static readonly byte Max = decimal.ToByte(Decimal.Max); //unchecked((byte)Decimal.Max);
                 }
+                public class Char
+                {
+                    public const char Default = (char)Double.Default;
+                    //TODO: Assert Throws
+                    //public const char Min = unchecked((char)Decimal.Min);
+                    //TODO: Assert Throws
+                    //public const char Max = unchecked((char)Decimal.Max);
+                }
                 public class SByte
                 {
                     public const sbyte Default = (sbyte)Decimal.Default;
@@ -1024,6 +1178,7 @@ namespace System.Runtime.ConversionServices.Tests
             new List<IConvertTest>
             {
                 ConvertTest.Create(Bool.Default, Bool.Default),
+                ConvertTest.Create(Bool.Default, Bool.Char.Default),
                 ConvertTest.Create(Bool.Default, Bool.SByte.Default),
                 ConvertTest.Create(Bool.Default, Bool.Byte.Default),
                 ConvertTest.Create(Bool.Default, Bool.Short.Default),
@@ -1036,6 +1191,7 @@ namespace System.Runtime.ConversionServices.Tests
                 ConvertTest.Create(Bool.Default, Bool.Double.Default),
                 ConvertTest.Create(Bool.Default, Bool.Decimal.Default),
                 ConvertTest.Create(Bool.Max, Bool.Max),
+                ConvertTest.Create(Bool.Max, Bool.Char.Max),
                 ConvertTest.Create(Bool.Max, Bool.SByte.Max),
                 ConvertTest.Create(Bool.Max, Bool.Byte.Max),
                 ConvertTest.Create(Bool.Max, Bool.Short.Max),
@@ -1049,10 +1205,57 @@ namespace System.Runtime.ConversionServices.Tests
                 ConvertTest.Create(Bool.Max, Bool.Decimal.Max),
             };
 
+        public static IEnumerable<IConvertTest> CharConvertTests =>
+            new List<IConvertTest>
+            {
+                ConvertTest.Create(TestConstants.Char.Default, TestConstants.Char.Bool.Default),
+                ConvertTest.Create(TestConstants.Char.Default, TestConstants.Char.Default),
+                ConvertTest.Create(TestConstants.Char.Default, TestConstants.Char.Byte.Default),
+                ConvertTest.Create(TestConstants.Char.Default, TestConstants.Char.SByte.Default),
+                ConvertTest.Create(TestConstants.Char.Default, TestConstants.Char.Short.Default),
+                ConvertTest.Create(TestConstants.Char.Default, TestConstants.Char.UShort.Default),
+                ConvertTest.Create(TestConstants.Char.Default, TestConstants.Char.Int.Default),
+                ConvertTest.Create(TestConstants.Char.Default, TestConstants.Char.UInt.Default),
+                ConvertTest.Create(TestConstants.Char.Default, TestConstants.Char.Long.Default),
+                ConvertTest.Create(TestConstants.Char.Default, TestConstants.Char.ULong.Default),
+                ConvertTest.Create(TestConstants.Char.Default, TestConstants.Char.Float.Default),
+                ConvertTest.Create(TestConstants.Char.Default, TestConstants.Char.Double.Default),
+                ConvertTest.Create(TestConstants.Char.Default, TestConstants.Char.Decimal.Default),
+
+                ConvertTest.Create(TestConstants.Char.Min, TestConstants.Char.Bool.Min),
+                ConvertTest.Create(TestConstants.Char.Min, TestConstants.Char.Min),
+                ConvertTest.Create(TestConstants.Char.Min, TestConstants.Char.Byte.Min),
+                ConvertTest.Create(TestConstants.Char.Min, TestConstants.Char.SByte.Min),
+                ConvertTest.Create(TestConstants.Char.Min, TestConstants.Char.Short.Min),
+                ConvertTest.Create(TestConstants.Char.Min, TestConstants.Char.UShort.Min),
+                ConvertTest.Create(TestConstants.Char.Min, TestConstants.Char.Int.Min),
+                ConvertTest.Create(TestConstants.Char.Min, TestConstants.Char.UInt.Min),
+                ConvertTest.Create(TestConstants.Char.Min, TestConstants.Char.Long.Min),
+                ConvertTest.Create(TestConstants.Char.Min, TestConstants.Char.ULong.Min),
+                ConvertTest.Create(TestConstants.Char.Min, TestConstants.Char.Float.Min),
+                ConvertTest.Create(TestConstants.Char.Min, TestConstants.Char.Double.Min),
+                ConvertTest.Create(TestConstants.Char.Min, TestConstants.Char.Decimal.Min),
+
+                ConvertTest.Create(TestConstants.Char.Max, TestConstants.Char.Bool.Max),
+                ConvertTest.Create(TestConstants.Char.Max, TestConstants.Char.Max),
+                ConvertTest.Create(TestConstants.Char.Max, TestConstants.Char.SByte.Max),
+                ConvertTest.Create(TestConstants.Char.Max, TestConstants.Char.Byte.Max),
+                ConvertTest.Create(TestConstants.Char.Max, TestConstants.Char.Short.Max),
+                ConvertTest.Create(TestConstants.Char.Max, TestConstants.Char.UShort.Max),
+                ConvertTest.Create(TestConstants.Char.Max, TestConstants.Char.Int.Max),
+                ConvertTest.Create(TestConstants.Char.Max, TestConstants.Char.UInt.Max),
+                ConvertTest.Create(TestConstants.Char.Max, TestConstants.Char.Long.Max),
+                ConvertTest.Create(TestConstants.Char.Max, TestConstants.Char.ULong.Max),
+                ConvertTest.Create(TestConstants.Char.Max, TestConstants.Char.Float.Max),
+                ConvertTest.Create(TestConstants.Char.Max, TestConstants.Char.Double.Max),
+                ConvertTest.Create(TestConstants.Char.Max, TestConstants.Char.Decimal.Max),
+            };
+
         public static IEnumerable<IConvertTest> SByteConvertTests =>
             new List<IConvertTest>
             {
                 ConvertTest.Create(TestConstants.SByte.Default, TestConstants.SByte.Bool.Default),
+                ConvertTest.Create(TestConstants.SByte.Default, TestConstants.SByte.Char.Default),
                 ConvertTest.Create(TestConstants.SByte.Default, TestConstants.SByte.Default),
                 ConvertTest.Create(TestConstants.SByte.Default, TestConstants.SByte.Byte.Default),
                 ConvertTest.Create(TestConstants.SByte.Default, TestConstants.SByte.Short.Default),
@@ -1066,6 +1269,7 @@ namespace System.Runtime.ConversionServices.Tests
                 ConvertTest.Create(TestConstants.SByte.Default, TestConstants.SByte.Decimal.Default),
 
                 ConvertTest.Create(TestConstants.SByte.Min, TestConstants.SByte.Bool.Min),
+                ConvertTest.Create(TestConstants.SByte.Min, TestConstants.SByte.Char.Min),
                 ConvertTest.Create(TestConstants.SByte.Min, TestConstants.SByte.Min),
                 ConvertTest.Create(TestConstants.SByte.Min, TestConstants.SByte.Byte.Min),
                 ConvertTest.Create(TestConstants.SByte.Min, TestConstants.SByte.Short.Min),
@@ -1079,6 +1283,7 @@ namespace System.Runtime.ConversionServices.Tests
                 ConvertTest.Create(TestConstants.SByte.Min, TestConstants.SByte.Decimal.Min),
 
                 ConvertTest.Create(TestConstants.SByte.Max, TestConstants.SByte.Bool.Max),
+                ConvertTest.Create(TestConstants.SByte.Max, TestConstants.SByte.Char.Max),
                 ConvertTest.Create(TestConstants.SByte.Max, TestConstants.SByte.Max),
                 ConvertTest.Create(TestConstants.SByte.Max, TestConstants.SByte.Byte.Max),
                 ConvertTest.Create(TestConstants.SByte.Max, TestConstants.SByte.Short.Max),
@@ -1096,6 +1301,7 @@ namespace System.Runtime.ConversionServices.Tests
             new List<IConvertTest>
             {
                 ConvertTest.Create(TestConstants.Byte.Default, TestConstants.Byte.Bool.Default),
+                ConvertTest.Create(TestConstants.Byte.Default, TestConstants.Byte.Char.Default),
                 ConvertTest.Create(TestConstants.Byte.Default, TestConstants.Byte.SByte.Default),
                 ConvertTest.Create(TestConstants.Byte.Default, TestConstants.Byte.Default),
                 ConvertTest.Create(TestConstants.Byte.Default, TestConstants.Byte.Short.Default),
@@ -1109,6 +1315,7 @@ namespace System.Runtime.ConversionServices.Tests
                 ConvertTest.Create(TestConstants.Byte.Default, TestConstants.Byte.Decimal.Default),
 
                 ConvertTest.Create(TestConstants.Byte.Min, TestConstants.Byte.Bool.Min),
+                ConvertTest.Create(TestConstants.Byte.Min, TestConstants.Byte.Char.Min),
                 ConvertTest.Create(TestConstants.Byte.Min, TestConstants.Byte.SByte.Min),
                 ConvertTest.Create(TestConstants.Byte.Min, TestConstants.Byte.Min),
                 ConvertTest.Create(TestConstants.Byte.Min, TestConstants.Byte.Short.Min),
@@ -1122,6 +1329,7 @@ namespace System.Runtime.ConversionServices.Tests
                 ConvertTest.Create(TestConstants.Byte.Min, TestConstants.Byte.Decimal.Min),
 
                 ConvertTest.Create(TestConstants.Byte.Max, TestConstants.Byte.Bool.Max),
+                ConvertTest.Create(TestConstants.Byte.Max, TestConstants.Byte.Char.Max),
                 ConvertTest.Create(TestConstants.Byte.Max, TestConstants.Byte.SByte.Max),
                 ConvertTest.Create(TestConstants.Byte.Max, TestConstants.Byte.Max),
                 ConvertTest.Create(TestConstants.Byte.Max, TestConstants.Byte.Short.Max),
@@ -1139,6 +1347,7 @@ namespace System.Runtime.ConversionServices.Tests
             new List<IConvertTest>
             {
                 ConvertTest.Create(TestConstants.Short.Default, TestConstants.Short.Bool.Default),
+                ConvertTest.Create(TestConstants.Short.Default, TestConstants.Short.Char.Default),
                 ConvertTest.Create(TestConstants.Short.Default, TestConstants.Short.SByte.Default),
                 ConvertTest.Create(TestConstants.Short.Default, TestConstants.Short.Byte.Default),
                 ConvertTest.Create(TestConstants.Short.Default, TestConstants.Short.Default),
@@ -1152,6 +1361,7 @@ namespace System.Runtime.ConversionServices.Tests
                 ConvertTest.Create(TestConstants.Short.Default, TestConstants.Short.Decimal.Default),
 
                 ConvertTest.Create(TestConstants.Short.Min, TestConstants.Short.Bool.Min),
+                ConvertTest.Create(TestConstants.Short.Min, TestConstants.Short.Char.Min),
                 ConvertTest.Create(TestConstants.Short.Min, TestConstants.Short.SByte.Min),
                 ConvertTest.Create(TestConstants.Short.Min, TestConstants.Short.Byte.Min),
                 ConvertTest.Create(TestConstants.Short.Min, TestConstants.Short.Min),
@@ -1165,6 +1375,7 @@ namespace System.Runtime.ConversionServices.Tests
                 ConvertTest.Create(TestConstants.Short.Min, TestConstants.Short.Decimal.Min),
 
                 ConvertTest.Create(TestConstants.Short.Max, TestConstants.Short.Bool.Max),
+                ConvertTest.Create(TestConstants.Short.Max, TestConstants.Short.Char.Max),
                 ConvertTest.Create(TestConstants.Short.Max, TestConstants.Short.SByte.Max),
                 ConvertTest.Create(TestConstants.Short.Max, TestConstants.Short.Byte.Max),
                 ConvertTest.Create(TestConstants.Short.Max, TestConstants.Short.Max),
@@ -1182,6 +1393,7 @@ namespace System.Runtime.ConversionServices.Tests
             new List<IConvertTest>
             {
                 ConvertTest.Create(TestConstants.UShort.Default, TestConstants.UShort.Bool.Default),
+                ConvertTest.Create(TestConstants.UShort.Default, TestConstants.UShort.Char.Default),
                 ConvertTest.Create(TestConstants.UShort.Default, TestConstants.UShort.SByte.Default),
                 ConvertTest.Create(TestConstants.UShort.Default, TestConstants.UShort.Byte.Default),
                 ConvertTest.Create(TestConstants.UShort.Default, TestConstants.UShort.Short.Default),
@@ -1195,6 +1407,7 @@ namespace System.Runtime.ConversionServices.Tests
                 ConvertTest.Create(TestConstants.UShort.Default, TestConstants.UShort.Decimal.Default),
 
                 ConvertTest.Create(TestConstants.UShort.Min, TestConstants.UShort.Bool.Min),
+                ConvertTest.Create(TestConstants.UShort.Min, TestConstants.UShort.Char.Min),
                 ConvertTest.Create(TestConstants.UShort.Min, TestConstants.UShort.SByte.Min),
                 ConvertTest.Create(TestConstants.UShort.Min, TestConstants.UShort.Byte.Min),
                 ConvertTest.Create(TestConstants.UShort.Min, TestConstants.UShort.Short.Min),
@@ -1208,6 +1421,7 @@ namespace System.Runtime.ConversionServices.Tests
                 ConvertTest.Create(TestConstants.UShort.Min, TestConstants.UShort.Decimal.Min),
 
                 ConvertTest.Create(TestConstants.UShort.Max, TestConstants.UShort.Bool.Max),
+                ConvertTest.Create(TestConstants.UShort.Max, TestConstants.UShort.Char.Max),
                 ConvertTest.Create(TestConstants.UShort.Max, TestConstants.UShort.SByte.Max),
                 ConvertTest.Create(TestConstants.UShort.Max, TestConstants.UShort.Byte.Max),
                 ConvertTest.Create(TestConstants.UShort.Max, TestConstants.UShort.Short.Max),
@@ -1225,6 +1439,7 @@ namespace System.Runtime.ConversionServices.Tests
             new List<IConvertTest>
             {
                 ConvertTest.Create(TestConstants.Int.Default, TestConstants.Int.Bool.Default),
+                ConvertTest.Create(TestConstants.Int.Default, TestConstants.Int.Char.Default),
                 ConvertTest.Create(TestConstants.Int.Default, TestConstants.Int.SByte.Default),
                 ConvertTest.Create(TestConstants.Int.Default, TestConstants.Int.Byte.Default),
                 ConvertTest.Create(TestConstants.Int.Default, TestConstants.Int.Short.Default),
@@ -1238,6 +1453,7 @@ namespace System.Runtime.ConversionServices.Tests
                 ConvertTest.Create(TestConstants.Int.Default, TestConstants.Int.Decimal.Default),
 
                 ConvertTest.Create(TestConstants.Int.Min, TestConstants.Int.Bool.Min),
+                ConvertTest.Create(TestConstants.Int.Min, TestConstants.Int.Char.Min),
                 ConvertTest.Create(TestConstants.Int.Min, TestConstants.Int.SByte.Min),
                 ConvertTest.Create(TestConstants.Int.Min, TestConstants.Int.Byte.Min),
                 ConvertTest.Create(TestConstants.Int.Min, TestConstants.Int.Short.Min),
@@ -1251,6 +1467,7 @@ namespace System.Runtime.ConversionServices.Tests
                 ConvertTest.Create(TestConstants.Int.Min, TestConstants.Int.Decimal.Min),
 
                 ConvertTest.Create(TestConstants.Int.Max, TestConstants.Int.Bool.Max),
+                ConvertTest.Create(TestConstants.Int.Max, TestConstants.Int.Char.Max),
                 ConvertTest.Create(TestConstants.Int.Max, TestConstants.Int.SByte.Max),
                 ConvertTest.Create(TestConstants.Int.Max, TestConstants.Int.Byte.Max),
                 ConvertTest.Create(TestConstants.Int.Max, TestConstants.Int.Short.Max),
@@ -1268,6 +1485,7 @@ namespace System.Runtime.ConversionServices.Tests
             new List<IConvertTest>
             {
                 ConvertTest.Create(TestConstants.UInt.Default, TestConstants.UInt.Bool.Default),
+                ConvertTest.Create(TestConstants.UInt.Default, TestConstants.UInt.Char.Default),
                 ConvertTest.Create(TestConstants.UInt.Default, TestConstants.UInt.SByte.Default),
                 ConvertTest.Create(TestConstants.UInt.Default, TestConstants.UInt.Byte.Default),
                 ConvertTest.Create(TestConstants.UInt.Default, TestConstants.UInt.Short.Default),
@@ -1281,6 +1499,7 @@ namespace System.Runtime.ConversionServices.Tests
                 ConvertTest.Create(TestConstants.UInt.Default, TestConstants.UInt.Decimal.Default),
 
                 ConvertTest.Create(TestConstants.UInt.Min, TestConstants.UInt.Bool.Min),
+                ConvertTest.Create(TestConstants.UInt.Min, TestConstants.UInt.Char.Min),
                 ConvertTest.Create(TestConstants.UInt.Min, TestConstants.UInt.SByte.Min),
                 ConvertTest.Create(TestConstants.UInt.Min, TestConstants.UInt.Byte.Min),
                 ConvertTest.Create(TestConstants.UInt.Min, TestConstants.UInt.Short.Min),
@@ -1294,6 +1513,7 @@ namespace System.Runtime.ConversionServices.Tests
                 ConvertTest.Create(TestConstants.UInt.Min, TestConstants.UInt.Decimal.Min),
 
                 ConvertTest.Create(TestConstants.UInt.Max, TestConstants.UInt.Bool.Max),
+                ConvertTest.Create(TestConstants.UInt.Max, TestConstants.UInt.Char.Max),
                 ConvertTest.Create(TestConstants.UInt.Max, TestConstants.UInt.SByte.Max),
                 ConvertTest.Create(TestConstants.UInt.Max, TestConstants.UInt.Byte.Max),
                 ConvertTest.Create(TestConstants.UInt.Max, TestConstants.UInt.Short.Max),
@@ -1311,6 +1531,7 @@ namespace System.Runtime.ConversionServices.Tests
             new List<IConvertTest>
             {
                 ConvertTest.Create(TestConstants.Long.Default, TestConstants.Long.Bool.Default),
+                ConvertTest.Create(TestConstants.Long.Default, TestConstants.Long.Char.Default),
                 ConvertTest.Create(TestConstants.Long.Default, TestConstants.Long.SByte.Default),
                 ConvertTest.Create(TestConstants.Long.Default, TestConstants.Long.Byte.Default),
                 ConvertTest.Create(TestConstants.Long.Default, TestConstants.Long.Short.Default),
@@ -1324,6 +1545,7 @@ namespace System.Runtime.ConversionServices.Tests
                 ConvertTest.Create(TestConstants.Long.Default, TestConstants.Long.Decimal.Default),
 
                 ConvertTest.Create(TestConstants.Long.Min, TestConstants.Long.Bool.Min),
+                ConvertTest.Create(TestConstants.Long.Min, TestConstants.Long.Char.Min),
                 ConvertTest.Create(TestConstants.Long.Min, TestConstants.Long.SByte.Min),
                 ConvertTest.Create(TestConstants.Long.Min, TestConstants.Long.Byte.Min),
                 ConvertTest.Create(TestConstants.Long.Min, TestConstants.Long.Short.Min),
@@ -1337,6 +1559,7 @@ namespace System.Runtime.ConversionServices.Tests
                 ConvertTest.Create(TestConstants.Long.Min, TestConstants.Long.Decimal.Min),
 
                 ConvertTest.Create(TestConstants.Long.Max, TestConstants.Long.Bool.Max),
+                ConvertTest.Create(TestConstants.Long.Max, TestConstants.Long.Char.Max),
                 ConvertTest.Create(TestConstants.Long.Max, TestConstants.Long.SByte.Max),
                 ConvertTest.Create(TestConstants.Long.Max, TestConstants.Long.Byte.Max),
                 ConvertTest.Create(TestConstants.Long.Max, TestConstants.Long.Short.Max),
@@ -1354,6 +1577,7 @@ namespace System.Runtime.ConversionServices.Tests
             new List<IConvertTest>
             {
                 ConvertTest.Create(TestConstants.ULong.Default, TestConstants.ULong.Bool.Default),
+                ConvertTest.Create(TestConstants.ULong.Default, TestConstants.ULong.Char.Default),
                 ConvertTest.Create(TestConstants.ULong.Default, TestConstants.ULong.SByte.Default),
                 ConvertTest.Create(TestConstants.ULong.Default, TestConstants.ULong.SByte.Default),
                 ConvertTest.Create(TestConstants.ULong.Default, TestConstants.ULong.Short.Default),
@@ -1367,6 +1591,7 @@ namespace System.Runtime.ConversionServices.Tests
                 ConvertTest.Create(TestConstants.ULong.Default, TestConstants.ULong.Decimal.Default),
 
                 ConvertTest.Create(TestConstants.ULong.Min, TestConstants.ULong.Bool.Min),
+                ConvertTest.Create(TestConstants.ULong.Min, TestConstants.ULong.Char.Min),
                 ConvertTest.Create(TestConstants.ULong.Min, TestConstants.ULong.SByte.Min),
                 ConvertTest.Create(TestConstants.ULong.Min, TestConstants.ULong.Byte.Min),
                 ConvertTest.Create(TestConstants.ULong.Min, TestConstants.ULong.Short.Min),
@@ -1380,6 +1605,7 @@ namespace System.Runtime.ConversionServices.Tests
                 ConvertTest.Create(TestConstants.ULong.Min, TestConstants.ULong.Decimal.Min),
 
                 ConvertTest.Create(TestConstants.ULong.Max, TestConstants.ULong.Bool.Max),
+                ConvertTest.Create(TestConstants.ULong.Max, TestConstants.ULong.Char.Max),
                 ConvertTest.Create(TestConstants.ULong.Max, TestConstants.ULong.SByte.Max),
                 ConvertTest.Create(TestConstants.ULong.Max, TestConstants.ULong.Byte.Max),
                 ConvertTest.Create(TestConstants.ULong.Max, TestConstants.ULong.Short.Max),
@@ -1397,6 +1623,7 @@ namespace System.Runtime.ConversionServices.Tests
             new List<IConvertTest>
             {
                 ConvertTest.Create(TestConstants.Float.Default, TestConstants.Float.Bool.Default),
+                ConvertTest.Create(TestConstants.Float.Default, TestConstants.Float.Char.Default),
                 ConvertTest.Create(TestConstants.Float.Default, TestConstants.Float.SByte.Default),
                 ConvertTest.Create(TestConstants.Float.Default, TestConstants.Float.Byte.Default),
                 ConvertTest.Create(TestConstants.Float.Default, TestConstants.Float.Short.Default),
@@ -1410,6 +1637,7 @@ namespace System.Runtime.ConversionServices.Tests
                 ConvertTest.Create(TestConstants.Float.Default, TestConstants.Float.Decimal.Default),
 
                 ConvertTest.Create(TestConstants.Float.Min, TestConstants.Float.Bool.Min),
+                ConvertTest.Create(TestConstants.Float.Min, TestConstants.Float.Char.Min),
                 ConvertTest.Create(TestConstants.Float.Min, TestConstants.Float.SByte.Min),
                 ConvertTest.Create(TestConstants.Float.Min, TestConstants.Float.Byte.Min),
                 ConvertTest.Create(TestConstants.Float.Min, TestConstants.Float.Short.Min),
@@ -1424,6 +1652,7 @@ namespace System.Runtime.ConversionServices.Tests
                 //ConvertTest.Create(TestConstants.Float.Min, TestConstants.Float.Decimal.Min),
 
                 ConvertTest.Create(TestConstants.Float.Max, TestConstants.Float.Bool.Max),
+                ConvertTest.Create(TestConstants.Float.Max, TestConstants.Float.Char.Max),
                 ConvertTest.Create(TestConstants.Float.Max, TestConstants.Float.SByte.Max),
                 ConvertTest.Create(TestConstants.Float.Max, TestConstants.Float.Byte.Max),
                 ConvertTest.Create(TestConstants.Float.Max, TestConstants.Float.Short.Max),
@@ -1442,6 +1671,7 @@ namespace System.Runtime.ConversionServices.Tests
             new List<IConvertTest>
             {
                 ConvertTest.Create(TestConstants.Double.Default, TestConstants.Double.Bool.Default),
+                ConvertTest.Create(TestConstants.Double.Default, TestConstants.Double.Char.Default),
                 ConvertTest.Create(TestConstants.Double.Default, TestConstants.Double.SByte.Default),
                 ConvertTest.Create(TestConstants.Double.Default, TestConstants.Double.Byte.Default),
                 ConvertTest.Create(TestConstants.Double.Default, TestConstants.Double.Short.Default),
@@ -1455,6 +1685,7 @@ namespace System.Runtime.ConversionServices.Tests
                 ConvertTest.Create(TestConstants.Double.Default, TestConstants.Double.Decimal.Default),
 
                 ConvertTest.Create(TestConstants.Double.Min, TestConstants.Double.Bool.Min),
+                ConvertTest.Create(TestConstants.Double.Min, TestConstants.Double.Char.Min),
                 ConvertTest.Create(TestConstants.Double.Min, TestConstants.Double.SByte.Min),
                 ConvertTest.Create(TestConstants.Double.Min, TestConstants.Double.Byte.Min),
                 ConvertTest.Create(TestConstants.Double.Min, TestConstants.Double.Short.Min),
@@ -1469,6 +1700,7 @@ namespace System.Runtime.ConversionServices.Tests
                 //ConvertTest.Create(TestConstants.Double.Min, TestConstants.Double.Decimal.Min),
 
                 ConvertTest.Create(TestConstants.Double.Max, TestConstants.Double.Bool.Max),
+                ConvertTest.Create(TestConstants.Double.Max, TestConstants.Double.Char.Max),
                 ConvertTest.Create(TestConstants.Double.Max, TestConstants.Double.SByte.Max),
                 ConvertTest.Create(TestConstants.Double.Max, TestConstants.Double.Byte.Max),
                 ConvertTest.Create(TestConstants.Double.Max, TestConstants.Double.Short.Max),
@@ -1487,6 +1719,7 @@ namespace System.Runtime.ConversionServices.Tests
             new List<IConvertTest>
             {
                 ConvertTest.Create(TestConstants.Decimal.Default, TestConstants.Decimal.Bool.Default),
+                ConvertTest.Create(TestConstants.Decimal.Default, TestConstants.Decimal.Char.Default),
                 ConvertTest.Create(TestConstants.Decimal.Default, TestConstants.Decimal.SByte.Default),
                 ConvertTest.Create(TestConstants.Decimal.Default, TestConstants.Decimal.Byte.Default),
                 ConvertTest.Create(TestConstants.Decimal.Default, TestConstants.Decimal.Short.Default),
@@ -1501,6 +1734,7 @@ namespace System.Runtime.ConversionServices.Tests
 
                 ConvertTest.Create(TestConstants.Decimal.Min, TestConstants.Decimal.Bool.Min),
                 //TODO: Assert Throws
+                //ConvertTest.Create(TestConstants.Decimal.Min, TestConstants.Decimal.Char.Min),
                 //ConvertTest.Create(TestConstants.Decimal.Min, TestConstants.Decimal.SByte.Min),
                 //ConvertTest.Create(TestConstants.Decimal.Min, TestConstants.Decimal.Byte.Min),
                 //ConvertTest.Create(TestConstants.Decimal.Min, TestConstants.Decimal.Short.Min),
@@ -1515,6 +1749,7 @@ namespace System.Runtime.ConversionServices.Tests
 
                 ConvertTest.Create(TestConstants.Decimal.Max, TestConstants.Decimal.Bool.Max),
                 //TODO: Assert Throws
+                //ConvertTest.Create(TestConstants.Decimal.Max, TestConstants.Decimal.Char.Max),
                 //ConvertTest.Create(TestConstants.Decimal.Max, TestConstants.Decimal.SByte.Max),
                 //ConvertTest.Create(TestConstants.Decimal.Max, TestConstants.Decimal.Byte.Max),
                 //ConvertTest.Create(TestConstants.Decimal.Max, TestConstants.Decimal.Short.Max),
@@ -1531,6 +1766,7 @@ namespace System.Runtime.ConversionServices.Tests
 
 
         public static IEnumerable<object[]> BoolTestData => BoolConvertTests.Select(x => new object[] { x });
+        public static IEnumerable<object[]> CharTestData => CharConvertTests.Select(x => new object[] { x });
         public static IEnumerable<object[]> SByteTestData => SByteConvertTests.Select(x => new object[] { x });
         public static IEnumerable<object[]> ByteTestData => ByteConvertTests.Select(x => new object[] { x });
         public static IEnumerable<object[]> ShortTestData => ShortConvertTests.Select(x => new object[] { x });
@@ -1548,6 +1784,13 @@ namespace System.Runtime.ConversionServices.Tests
         [Theory]
         [MemberData(nameof(BoolTestData))]
         public void BoolTests(IConvertTest test)
+        {
+            test.Run();
+        }
+
+        [Theory]
+        [MemberData(nameof(CharTestData))]
+        public void CharTests(IConvertTest test)
         {
             test.Run();
         }
