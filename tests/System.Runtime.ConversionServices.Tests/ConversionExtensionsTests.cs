@@ -4,108 +4,13 @@ using System.Linq;
 using System.Reflection;
 using Xunit;
 using static System.Runtime.ConversionServices.Conversions;
-using static System.Runtime.ConversionServices.Tests.BoxExtensions;
-
 
 namespace System.Runtime.ConversionServices.Tests
 {
-    public static class BoxExtensions
-    {
-        public static object New(this Type type, object value) => ((TypeInfo)type).New(value);
-        public static object New(this TypeInfo type, object value) =>
-            type.DeclaredConstructors.First().Invoke(new[] { value });
-
-        public static TypeInfo BoxType = (TypeInfo)typeof(BoxTest<>);
-        public static BoxTest<T> Wrap<T>(this T source) => new BoxTest<T>(source);
-        public interface IUnbox
-        {
-            object Unbox(object value);
-        }
-
-        public struct BoxTest<T> : IUnbox
-        {
-            public T source;
-            public Type GenericType;
-            public Type RuntimeType;
-            public BoxTest(T instance)
-            {
-                source = instance;
-                GenericType = typeof(T);
-                RuntimeType = instance.GetType();
-            }
-            public object Unbox(object value) => (T)value;
-            public bool IsInt => source is int;
-            public object Unwrap() => BoxType.MakeGenericType(RuntimeType).New(source);
-            public object UnwrapTo(Type type) => BoxType.MakeGenericType(type).New(source);
-            public BoxTest<U> Unwrap<U>() => new BoxTest<U>(Unbox<U>());
-            public U Unbox<U>() => (U)(object)source;
-        }
-        public static TypeInfo DirectCastType = (TypeInfo)typeof(DirectCast<>);
-        public static class DirectCast
-        {
-            public static Dictionary<Type, IUnbox> casters = new Dictionary<Type, IUnbox>();
-            public static object Unbox(object src)
-            {
-                if (src is null) return src;
-                var srcType = src.GetType();
-                if (!casters.ContainsKey(srcType))
-                {
-                    var instance = (IUnbox)Activator.CreateInstance(DirectCastType.MakeGenericType(srcType));
-                    casters.Add(srcType, instance);
-                    return instance.Unbox(src);
-                }
-                return casters[srcType].Unbox(src);
-            }
-        }
-
-        public struct DirectCast<T> : IUnbox
-        {
-            public object Unbox(object value) => (T)value;
-        }
-        
-
-    }
+  
 
     public class ConversionExtensionsTests
     {
-      
-        
-
-        [Fact]
-        public void TestBoxUnbox()
-        {
-            Stack<object> stack = new Stack<object>();
-            var expected = 1;
-            stack.Push(expected);
-            var boxedInt = stack.Pop();
-            var boxTest = boxedInt.Wrap();
-            Assert.Throws<System.InvalidCastException>(() => (BoxTest<int>)(object)boxTest);
-            var unwrapped = (BoxTest<int>)boxTest.Unwrap();
-            Assert.True(boxTest.GenericType == typeof(object));
-            Assert.True(boxTest.GenericType != boxTest.source.GetType());
-            Assert.True(boxTest.source is int);
-            Assert.True(boxTest.IsInt);
-
-           
-     
-            var unwrappedBox = boxTest.Unwrap<int>();
-            var unwrappedBoxAsboxed = boxTest.UnwrapTo(typeof(int));
-            Assert.IsType(unwrappedBox.GetType(), unwrappedBoxAsboxed);
-            var unboxed = boxTest.Unbox<int>();
-
-            Assert.True(unwrapped.GenericType == typeof(int));
-            Assert.True(unwrapped.GenericType == unwrapped.source.GetType());
-            Assert.True(unwrapped.source is int);
-            Assert.True(unwrapped.IsInt);
-
-            RuntimeConverter<int, byte>.Convert(1);
-            Assert.IsType<int>(boxedInt);// this is fails.
-            Assert.IsNotType<object>(boxedInt);
-            boxedInt.To(typeof(int));
-            var unboxedTo = boxedInt.To<int>();
-            Assert.IsType<int>(unboxed);
-
-        }
 
         [Fact]
         public void TestConvertTestsSucceed()

@@ -9,7 +9,7 @@ namespace System.Runtime.ConversionServices.Tests
         public static void Main(string[] args)
         {
             var tests = new ConversionExtensionsTests();
-            tests.TestBoxUnbox();
+            tests.TestConvertArray();
         }
     }
 }
