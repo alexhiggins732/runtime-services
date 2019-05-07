@@ -23,7 +23,7 @@ namespace System.Runtime.ConversionServices
             /// <summary>
             /// Provides the Runtime <see cref="Type"/> of the &lt;<typeparamref name="TIn"/>&gt; type parameter.
             /// </summary>
-            public Type InType => typeof(TIn);
+            public static Type InType => typeof(TIn);
 
             /// <summary>
             /// Converts the <see cref="Value"/> to &lt;<typeparamref name="TOut"/>&gt;
