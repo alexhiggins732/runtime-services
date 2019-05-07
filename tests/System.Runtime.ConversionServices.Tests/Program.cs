@@ -10,15 +10,9 @@ namespace System.Runtime.ConversionServices.Tests
     {
         public static void Main(string[] args)
         {
-            var tests = new CompareExtensionTests();
+            var tests = new DependencyInjectionOverrideTests();
 
-            var boolTests = ParameterizedConversionTests.BoolTestData;
-            var boolTestArray = boolTests.ToArray();
-            var data = CompareExtensionTests.AllTests;
-            foreach(var array in data)
-            {
-                tests.TestOrderedCompareLessThan((IArrayWrapper)array[0]);
-            }
+            tests.TestDiInjectionFromEnumerable();
          
         }
     }

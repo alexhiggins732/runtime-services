@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using static System.Runtime.ConversionServices.Conversions;
 
 namespace System.Runtime.ConversionServices.CompileTimeConverters
 {
@@ -60,7 +61,7 @@ namespace System.Runtime.ConversionServices.CompileTimeConverters
             }
             return null;
         }
-        //TODO: implement depency injection pattern.
+        //TODO: Move outside of this class and inject via public dependency injection interface.
         public interface IConvertFunc { }
         public interface IConvertFunc<T> : IConvertFunc
         {
@@ -79,6 +80,12 @@ namespace System.Runtime.ConversionServices.CompileTimeConverters
                 };
             }
         }
+
+        public static void RegisterConverter2(Func<object, string> p)
+        {
+            throw new NotImplementedException();
+        }
+
         public struct BoolToDateTime : IConvertFunc<bool>
         {
             public static Func<bool, DateTime> Convert = (value) => throw new InvalidCastException();
@@ -87,6 +94,56 @@ namespace System.Runtime.ConversionServices.CompileTimeConverters
         {
             public static Func<char, bool> Convert = (value) => value != default(char);
         }
+
+        //TODO: Expose a static interface to allow dependency injection
+        //  via ServiceCollection or offer a ContainerExtension type api.
+
+        public static void RegisterConverter<TIn, TOut>(Func<TIn,TOut> converter)
+        {
+            RuntimeConverter<TIn, TOut>.Convert = converter;
+        }
+
+ 
+        public static void RegisterConverters(IEnumerable<Delegate> converters)
+        {
+            //GEEZ alot of work to allow registration of multiple at a time.
+            // So much easier and efficient to call RegisterConverter<TIn, TOut>(Func<TIn,TOut> converter)
+            //  and directly set the converter via RuntimeConverter<TIn, TOut>.Convert = converter;
+            foreach (var converterFunc in converters)
+            {
+                var methodInfo = converterFunc.Method;
+                var fromType = methodInfo.GetParameters()[0].ParameterType;
+                var toType = methodInfo.ReturnType;
+                //TODO: validate the method type arguments and throw an exception  if the method 
+                // doesn't match the Func<TIn,TOut> AKA, public static <TOut> MethodName(<TIn> value)
+                //TODO: check the method is statically callable.
+
+
+                // Sete the cache here before initialize the static RuntimeConverter.
+                //      to prevent any issues with Conversions.CreateConverter creating
+                //      some invalid converter the consumer is trying to override/fix.
+                // Additionally, do a direct set. Add is only used in the initializers
+                //      to guarantee uniqueness if internally statically compiled converts.
+
+                cache[fromType][methodInfo.ReturnType]= converterFunc;
+
+                //Get a reference to the static RuntimeConverter<TIn,TOut>.Convert Field
+                //      This will initialize the struct if hasn't been yet.
+                var t = typeof(RuntimeConverter<,>).MakeGenericType(fromType, methodInfo.ReturnType);
+
+                // If the struct was initialized prior to this call the convert delegate 
+                //      will already be set and We need to update it. If it wasn't.
+                //      then it already pulled a reference to this function from the cache.
+                //      but we'll set here to be safe.
+
+                var converterChache = t.GetField("Convert");
+                converterChache.SetValue(null, converterFunc);
+
+            }
+            
+        }
+
+       
     }
 
 }
