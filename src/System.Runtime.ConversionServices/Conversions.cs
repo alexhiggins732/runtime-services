@@ -12,7 +12,8 @@ namespace System.Runtime.ConversionServices
             var underylingType = Nullable.GetUnderlyingType(typeof(T));
             return underylingType != null;
         }
-        public static T UnderlyingDefault<T>() => (T)((object)null).To(Nullable.GetUnderlyingType(typeof(T)));
+        public static T UnderlyingDefault<T>() => 
+            (T)((object)null).To(Nullable.GetUnderlyingType(typeof(T)));
 
         /// <summary>
         /// Generates runtime conversion function
@@ -101,11 +102,14 @@ namespace System.Runtime.ConversionServices
         /// <typeparam name="T"></typeparam>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static Converter<T> Convert<T>(this T value) { return new Converter<T> { Value = value }; }
+        public static Converter<T> Convert<T>(this T value)
+            { return new Converter<T> { Value = value }; }
 
-        public static IRuntimeConvert Compare<T>(this T value) { return new Converter<T> { Value = value }; }
+        public static IRuntimeConvert Compare<T>(this T value)
+            { return new Converter<T> { Value = value }; }
 
-        public static int Compare<T>(this T value, object other) { return value.Compare().Compare(other); }
+        public static int Compare<T>(this T value, object other)
+            { return value.Compare().Compare(other); }
 
         public static IRuntimeConvert Unbox<T>(this T value)
         {
