@@ -22,7 +22,7 @@ namespace System.Runtime.ConversionServices
         }
     }
 
-   
+
 
 
     public struct GenericArithmetic
@@ -288,8 +288,8 @@ namespace System.Runtime.ConversionServices
         }
     }
 
- 
-    public interface ITypedReference
+
+    public interface ITypedReference : IGeneric
     {
         T Cast<T>();
         T DirectCast<T>();
@@ -307,9 +307,11 @@ namespace System.Runtime.ConversionServices
         ITypedReference BinaryCall(ITypedReference other, OperatorType opType, OperatorOptions operatorOptions);
         ITypedReference BinaryCallHandler<TOther>(TypedReference<TOther> other, OperatorType opType);
         ITypedReference BinaryCallHandler<TOther>(TypedReference<TOther> other, OperatorType opType, OperatorOptions operatorOptions);
+
+
     }
 
-    public struct OperandFactory<T1,T2>
+    public struct OperandFactory<T1, T2>
     {
         public static ITypedReference Call
             (T1 a, T2 b, OperatorType operatorType, OperatorOptions none)
@@ -331,12 +333,21 @@ namespace System.Runtime.ConversionServices
         }
     }
 
-    public struct TypedReference<T> : ITypedReference
+    public struct TypedReference<T> : ITypedReference//, IGenericType<T>
     {
+        public T TDefault() => default(T);
+
+        //public IGenericFactory GenericFactory2 => GenericFactory<T>.Instance;
+        public IGenericStruct Generic => new Generic<T> { Value = Value };
+
+
         public T Value;
         public static Type GenericTypeCache => typeof(T);
         public Type GenericType => GenericTypeCache;
         public object BoxedValue => Value;
+
+
+
         public TypedReference(T value) => this.Value = value;
         public TOut Cast<TOut>() => TypedReferenceConverter<T, TOut>.Convert(Value);
         public TOut DirectCast<TOut>() => (TOut)(object)Value;
@@ -369,7 +380,7 @@ namespace System.Runtime.ConversionServices
         }
         public ITypedReference BinaryCallHandler<TOther>(TypedReference<TOther> other, OperatorType operatorType, OperatorOptions operatorOptions)
         {
-            return OperandFactory<T, TOther>.Call(this.Value, other.Value, operatorType, operatorOptions);    
+            return OperandFactory<T, TOther>.Call(this.Value, other.Value, operatorType, operatorOptions);
         }
 
         public ITypedReference Add(ITypedReference other)
@@ -393,6 +404,8 @@ namespace System.Runtime.ConversionServices
             return GenericAdd<T, TOther>.Op_Add(this.Value, other.Value);
         }
 
+
+
         public static implicit operator T(TypedReference<T> typedReference) => typedReference.Value;
         public static explicit operator TypedReference<T>(T value) => (TypedReference<T>)TypedReferenceFactory.GetTypedReference<T>(value);
     }
@@ -410,6 +423,35 @@ namespace System.Runtime.ConversionServices
         //        return objectReference;
         //    return new ObjectReference(value);
         //}
+        public static ITypedReference ToTypedReference<T>(this T value)
+        {
+            if (value is ObjectReference objectReference)
+                return objectReference.TypedReference;
+            if (value.GetType() != typeof(object)) return new TypedReference<T> { Value = value };
+            return new ObjectReference(value).TypedReference;
+        }
+        //public static TypedReference<T> ToTypedReference<T>(this T value)
+        //{
+        //    if (value is ObjectReference objectReference)
+        //        return (TypedReference<T>)objectReference.TypedReference;
+        //    if (value.GetType() != typeof(object)) return new TypedReference<T> { Value = value };
+        //    return (TypedReference<T>)new ObjectReference(value).TypedReference;
+        //}
+
+        public static IGenericArithmetic ToArithmetic(this ITypedReference value)
+        {
+            return value.Generic.Arithmetic;
+        }
+    
+
+        public static ArithmeticTest<T> ToArithmetic<T>(this TypedReference<T> value)
+        {
+
+            return new ArithmeticTest<T> { Value = value.Value };
+
+
+        }
+
         public static ITypedReference ToTypedReference(this object value)
         {
             if (value is ObjectReference objectReference)

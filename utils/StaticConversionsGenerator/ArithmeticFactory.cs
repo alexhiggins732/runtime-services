@@ -18,6 +18,8 @@ namespace System.Runtime.ConversionServices
 
     public interface IAdd { }
     public interface IAddUnchecked { }
+    public interface ISubtract { }
+    public interface ISubtractUnchecked { }
 
     public struct Add<T1, T2> : ICallable
     {
@@ -25,6 +27,25 @@ namespace System.Runtime.ConversionServices
             new ArithmeticTest<dynamic> { Value = (dynamic)a + (dynamic)b };
 
         public static ICallable Callable => new Add<T1, T2>();
+
+        public IGenericArithmetic Call(ArithmeticTest<T1> a, ArithmeticTest<T2> b)
+        {
+            return Op(a.Value, b.Value);
+        }
+
+        public IGenericArithmetic Call(IGenericArithmetic a, IGenericArithmetic b)
+        {
+
+            return Call((ArithmeticTest<T1>)a, (ArithmeticTest<T2>)b);
+        }
+    }
+
+    public struct Subtract<T1, T2> : ICallable
+    {
+        public static Func<T1, T2, IGenericArithmetic> Op = (a, b) =>
+            new ArithmeticTest<dynamic> { Value = (dynamic)a - (dynamic)b };
+
+        public static ICallable Callable => new Subtract<T1, T2>();
 
         public IGenericArithmetic Call(ArithmeticTest<T1> a, ArithmeticTest<T2> b)
         {
@@ -46,7 +67,7 @@ namespace System.Runtime.ConversionServices
     {
         new IGenericArithmetic Call(IGenericArithmetic a, IGenericArithmetic b);
     }
-    public interface IGenericArithmetic
+    public interface IGenericArithmetic : IGeneric
     {
         IGenericArithmetic Call(IGenericArithmetic a, IGenericArithmetic b);
         ICallable ResolveCall<TOther>(ArithmeticTest<TOther> other);
@@ -60,6 +81,8 @@ namespace System.Runtime.ConversionServices
     public struct ArithmeticTest<T> : IGenericArithmetic
     {
         public T Value;
+
+        public ArithmeticTest(T value) => this.Value = value;
 
 
         public IGenericArithmetic Call(IGenericArithmetic a, IGenericArithmetic b)
@@ -80,27 +103,12 @@ namespace System.Runtime.ConversionServices
             return Add<T, TOther>.Callable;
         }
 
-    }
-    //TODO: Need to move extensions to TypedReference
-    public static class GenericArithmeticExtensions
-    {
-        public static IGenericArithmetic Arithmetic
-            (this ITypedReference value)
-            => new ArithmeticTest<ITypedReference> { Value = value };
+        public static Func<T, ArithmeticTest<T>> Create = (value) => new ArithmeticTest<T> { Value = value };
 
-        public static IGenericArithmetic Add
-            (this IGenericArithmetic value, IGenericArithmetic other)
-        {
-            return value.Op<IAdd>(other);
-        }
-        public static IGenericArithmetic AddUnchecked
-            (this IGenericArithmetic value, IGenericArithmetic other)
-        {
-            return value.Op<IAddUnchecked>(other);
-        }
+        public IGenericStruct Generic => new Generic<T> { Value = Value };
     }
 
-    class ArithmeticFactory
+    public class ArithmeticFactory
     {
         public static void TestInterfaceCall()
         {
@@ -111,9 +119,16 @@ namespace System.Runtime.ConversionServices
             var tr2 = 2.ToTypedReference().Arithmetic();
             var callableResult = tr1.Add(tr2);
 
+            1.ArithmeticTest().Add(2);
+            var result = 1.Add(2).Subtract(3);
+
+
             var tr1Unchecked = int.MaxValue.ToTypedReference().Arithmetic();
             var tr2Unchecked = int.MaxValue.ToTypedReference().Arithmetic();
+
             var uncheckedResult = tr1Unchecked.AddUnchecked(tr2);
+
+            var convertedUnchecked = uncheckedResult.To<ulong>();
 
 
             var res1 = OperandGenerator.Add<int, int, int>.Op(1, 2);

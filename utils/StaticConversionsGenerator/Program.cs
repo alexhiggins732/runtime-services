@@ -114,13 +114,17 @@ namespace StaticConversionsGenerator
         }
         static void Main(string[] args)
         {
+            //GenericCallFactory.ResolverFactoryTest.Test();
+
+            //GenericBinder.GenericBinderTest.Run();
+            ArithmeticFactory.TestInterfaceCall();
             var b = new SignatureBuilderTest();
             SignatureBuilderTest.TestBuilder();
             SignatureBuilderTest.TypeRefActionTest();
 
             AnonTypeKey();
             var expressions = GetExpressions();
-            ArithmeticFactory.TestInterfaceCall();
+       
 
             TypedReferenceDevelopHelper.RunOperatorTests();
 
