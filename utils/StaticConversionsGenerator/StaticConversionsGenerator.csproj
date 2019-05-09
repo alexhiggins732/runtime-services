@@ -60,7 +60,6 @@
     <Compile Include="GenericCallFactory.cs" />
     <Compile Include="GenericDynamicCacheTemplate.cs" />
     <Compile Include="GenericTypeDefinition.cs" />
-    <Compile Include="OperandFactory.cs" />
     <Compile Include="InterfaceGenerator.cs" />
     <Compile Include="OpCodeHelper.cs" />
     <Compile Include="Program.cs" />

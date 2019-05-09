@@ -23,6 +23,62 @@ namespace StaticConversionsGenerator
     }
     public class GenericRuntimeTypeDefinitionFactory
     {
+        //TODO: Cleanup interface. Expose limited number of top level types
+        public static void ExplicitInterfaceExtenstionTests()
+        {
+            //TODO: Did we lose interface cleanup?
+            var newFromType = typeof(TestClass).New();
+
+            //TODO: Remove need to cast arge to runtime typed reference
+            //TODO: Expose only via Arithmetic interface.
+            newFromType.Add(1.ToTypedReference());
+            newFromType.Add<int>(1.ToTypedReference());
+            newFromType.Arithmetic();// <- this is okay I think.
+            //TODO: Nested and renamed (maybe op binary)
+            newFromType.BinaryCall(1.ToTypedReference(), OperatorType.Add);
+            //TODO: Should this be a method call?
+            //TODO: Make explicit interface method and point to T Value;
+            var boxed = newFromType.BoxedValue;
+        }
+        //TODO: Decide on API implementation definition;
+        public static void CompileInterfaceUsageTests()
+        {
+            //newFromType.Props(TestClass.IntField).Get();
+            //newFromType.Props("name").Get;
+            //newFromType.Props("name").Set(1);
+
+            //newFromType.Fields(TestClass.IntField).Get();
+            //newFromType.Fields("name").Get;
+            //newFromType.Fields("name").Set(1);
+
+            ////VS:
+            //GenericRuntimeTypeDefinition<TestClass>.Instance(newFromType).Properties(name) = "1";
+            //GenericRuntimeTypeDefinition<TestClass>.Static.Properties("name") = "1";
+            ////VS:
+
+            ////Also-> methods vs 1) dictionary for all?
+            //newFromType.Members["Name"] = "some value";
+            ////vs single method.
+            //newFromType.Members("Name") = "some value";
+            ////vs 
+            //newFromType.Members("Name").Set("some value");
+            //newFromType.Members("Name").Get;
+            //newFromType.Members("Name").Get();
+            //newFromType.Members("Name").Invoke();
+            //// vs:
+
+            //newFromType.SetField(nameof(TestClass.IntField), 1);
+            //newFromType.SetField(nameof(TestClass.StringField), "1");//TODO: need to setup implicit string conversions.
+            //newFromType.GetField(nameof(TestClass.IntField), 1);
+            //newFromType.GetField(nameof(TestClass.StringField), "1");//TODO: need to setup implicit string conversions.
+            //newFromType.SetProp(nameof(TestClass.IntProperty), 1);
+            //newFromType.GetProp(nameof(TestClass.IntProperty), 1);
+            //newFromType.Call(nameof(TestClass.SomeVoid));
+            //newFromType.Call(nameof(TestClass.SomeIntMethod);
+            //newFromType.Call(nameof(TestClass.SomeIntMethod), 1);
+            //newFromType.Call(nameof(TestClass.SomeIntMethod), 1, "s");
+            //newFromType.Call(nameof(TestClass.SomeIntMethod), new[] { 1, "s" });
+        }
         public static void TestGenericTypeDefinition()
         {
 
@@ -38,12 +94,22 @@ namespace StaticConversionsGenerator
 
 
 
+
+            //TODO: Implement. Decide on nest.
+
+            //Two considerations. 1) compile time API. 2 Runtime api.
+
+
+
             var def = new GenericRuntimeTypeDefinition<TestClass>();
             var typedRef = def.TypedReference;
 
 
 
             var newTestDefault = def.New();
+
+            //TODO: Cleanup Extensions on strongly typed refrerences.
+            //newTestDefault.Compare
 
             var newTestPublicFirst = def.New(x => x.TypeInfo.PublicConstructors.First());
             var newTestPublicFirstFromTypeInfo = def.New(x => x.TypeInfo.PublicConstructors.First());
@@ -54,7 +120,10 @@ namespace StaticConversionsGenerator
             var newTestPrivateSecond = def.New(x => x.TypeInfo.PrivateConstructors[1], 1);
 
             var newTestResolved = def.New("hello", 1);
+
+
         }
+
         public class TestClass
         {
             public TestClass() { }
@@ -78,8 +147,6 @@ namespace StaticConversionsGenerator
             public int SomeIntMethod<T>() => 1;
             public int SomeIntMethod<T>(string arg) => 1;
         }
-
-
 
         public interface IConstructorDefinition
         {
@@ -116,7 +183,7 @@ namespace StaticConversionsGenerator
                 //var anonymousArgs = args.Select(x => new { x }).ToArray();
                 //var tr = anonymousArgs.ToTypedReference();
                 //var trGeneric = tr.MakeGeneric(typeof(MethodArgs<>)).New();
-                
+
                 ////TODO: Solidify SetValue. It is only meant for the typedReference itself.
 
                 //trGeneric.SetValue(anonymousArgs);// can't use set value 
@@ -134,6 +201,8 @@ namespace StaticConversionsGenerator
             private Type[] argumentTypes;
             public Type[] ArgumentTypes => (argumentTypes ?? (argumentTypes = x.GetParameters().Select(x => x.ParameterType).ToArray()));
         }
+
+        //TODO: Determine feasibility of static cache vs introducing garbage collection at the cost of performance.
         public class PublicConstructorDefinition<T> : ConstructorDefinition<T>
         {
             public PublicConstructorDefinition(ConstructorInfo x) : base(x) { }
@@ -148,6 +217,7 @@ namespace StaticConversionsGenerator
 
             IConstructorDefinition DefaultConstructor { get; }
         }
+
         public class GenericRuntimeTypeInfo<T> : IRuntimeTypeInfo
         {
             private GenericRuntimeTypeDefinition<T> typeDefinition;
@@ -199,6 +269,7 @@ namespace StaticConversionsGenerator
             IRuntimeTypedReference New(params object[] args);
             IRuntimeTypeInfo GenericRuntimeTypeInfo { get; }
         }
+
         public class GenericRuntimeTypeDefinition<T> : IGenericRuntimeTypeDefinition
         {
             public RuntimeTypedReference<T> TypedReference = new RuntimeTypedReference<T>();
@@ -216,6 +287,12 @@ namespace StaticConversionsGenerator
             //TODO: Convert methods,getters and setters into delegates (action or func)
             //TODO: Auto bind delegates using generics 
 
+
+            //Boxed Fluent API
+            IRuntimeTypedReference IGenericRuntimeTypeDefinition.New() => new RuntimeTypedReference<T>(New());
+            IRuntimeTypedReference IGenericRuntimeTypeDefinition.New(params object[] args) => new RuntimeTypedReference<T>(New(args));
+
+            //Typed Fluent API
             public T New()
             {
                 var result = default(T);
@@ -226,9 +303,6 @@ namespace StaticConversionsGenerator
                 }
                 return result;
             }
-
-            IRuntimeTypedReference IGenericRuntimeTypeDefinition.New() => new RuntimeTypedReference<T>(New());
-            IRuntimeTypedReference IGenericRuntimeTypeDefinition.New(params object[] args) => new RuntimeTypedReference<T>(New(args));
 
             public T New(Func<GenericRuntimeTypeDefinition<T>, ConstructorDefinition<T>> constructorResolver)
             {

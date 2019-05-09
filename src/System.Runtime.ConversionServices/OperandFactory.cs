@@ -37,7 +37,7 @@ namespace System.Runtime.ConversionServices
             Not
 
         }
-
+         
         public struct Negate<T>
         {
             public static Func<T, T> Op = CreateUnary<T, T>(Operation.Negate);
