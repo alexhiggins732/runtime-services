@@ -28,23 +28,23 @@ namespace System.Runtime.ConversionServices
     public struct GenericArithmetic
     {
         /// <summary>
-        /// This method requires operators to be defined on <see cref="TypedReference{T}"/>
+        /// This method requires operators to be defined on <see cref="RuntimeTypedReference{T}"/>
         ///     Adding adding the numerous operators will make the definition become unweildy.
         ///     We certainly could manage with partial structs but... can we find a better way?
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
         /// <returns></returns>
-        public static ITypedReference Add(ITypedReference a, ITypedReference b)
+        public static IRuntimeTypedReference Add(IRuntimeTypedReference a, IRuntimeTypedReference b)
         {
             return a.Add(b);
         }
 
-        public static ITypedReference AddUnchecked(ITypedReference a, ITypedReference b)
+        public static IRuntimeTypedReference AddUnchecked(IRuntimeTypedReference a, IRuntimeTypedReference b)
         {
             return TypedReferenceFactory.BinaryCall(a, b, OperatorType.Add, OperatorOptions.Unchecked);
         }
-        public static T AddUnchecked<T>(ITypedReference a, ITypedReference b)
+        public static T AddUnchecked<T>(IRuntimeTypedReference a, IRuntimeTypedReference b)
         {
             return TypedReferenceFactory.BinaryCall(a, b, OperatorType.Add, OperatorOptions.Unchecked).Cast<T>(); ;
         }
@@ -65,145 +65,145 @@ namespace System.Runtime.ConversionServices
 
         private static void registerAdditionOperators()
         {
-            GenericAdd<sbyte, sbyte>.Op_Add = (a, b) => new TypedReference<int>(a + b);
-            GenericAdd<sbyte, byte>.Op_Add = (a, b) => new TypedReference<int>(a + b);
-            GenericAdd<sbyte, short>.Op_Add = (a, b) => new TypedReference<int>(a + b);
-            GenericAdd<sbyte, ushort>.Op_Add = (a, b) => new TypedReference<int>(a + b);
-            GenericAdd<sbyte, int>.Op_Add = (a, b) => new TypedReference<int>(a + b);
-            GenericAdd<sbyte, uint>.Op_Add = (a, b) => new TypedReference<long>(a + b);
-            GenericAdd<sbyte, long>.Op_Add = (a, b) => new TypedReference<long>(a + b);
-            GenericAdd<sbyte, ulong>.Op_Add = (a, b) => new TypedReference<ulong>((ulong)a + b);
-            GenericAdd<sbyte, float>.Op_Add = (a, b) => new TypedReference<float>(a + b);
-            GenericAdd<sbyte, double>.Op_Add = (a, b) => new TypedReference<double>(a + b);
-            GenericAdd<sbyte, decimal>.Op_Add = (a, b) => new TypedReference<decimal>(a + b);
+            GenericAdd<sbyte, sbyte>.Op_Add = (a, b) => new RuntimeTypedReference<int>(a + b);
+            GenericAdd<sbyte, byte>.Op_Add = (a, b) => new RuntimeTypedReference<int>(a + b);
+            GenericAdd<sbyte, short>.Op_Add = (a, b) => new RuntimeTypedReference<int>(a + b);
+            GenericAdd<sbyte, ushort>.Op_Add = (a, b) => new RuntimeTypedReference<int>(a + b);
+            GenericAdd<sbyte, int>.Op_Add = (a, b) => new RuntimeTypedReference<int>(a + b);
+            GenericAdd<sbyte, uint>.Op_Add = (a, b) => new RuntimeTypedReference<long>(a + b);
+            GenericAdd<sbyte, long>.Op_Add = (a, b) => new RuntimeTypedReference<long>(a + b);
+            GenericAdd<sbyte, ulong>.Op_Add = (a, b) => new RuntimeTypedReference<ulong>((ulong)a + b);
+            GenericAdd<sbyte, float>.Op_Add = (a, b) => new RuntimeTypedReference<float>(a + b);
+            GenericAdd<sbyte, double>.Op_Add = (a, b) => new RuntimeTypedReference<double>(a + b);
+            GenericAdd<sbyte, decimal>.Op_Add = (a, b) => new RuntimeTypedReference<decimal>(a + b);
 
-            GenericAdd<byte, sbyte>.Op_Add = (a, b) => new TypedReference<int>(a + b);
-            GenericAdd<byte, byte>.Op_Add = (a, b) => new TypedReference<int>(a + b);
-            GenericAdd<byte, short>.Op_Add = (a, b) => new TypedReference<int>(a + b);
-            GenericAdd<byte, ushort>.Op_Add = (a, b) => new TypedReference<int>(a + b);
-            GenericAdd<byte, int>.Op_Add = (a, b) => new TypedReference<int>(a + b);
-            GenericAdd<byte, uint>.Op_Add = (a, b) => new TypedReference<uint>(a + b);
-            GenericAdd<byte, long>.Op_Add = (a, b) => new TypedReference<long>(a + b);
-            GenericAdd<byte, ulong>.Op_Add = (a, b) => new TypedReference<ulong>((ulong)a + b);
-            GenericAdd<byte, float>.Op_Add = (a, b) => new TypedReference<float>(a + b);
-            GenericAdd<byte, double>.Op_Add = (a, b) => new TypedReference<double>(a + b);
-            GenericAdd<byte, decimal>.Op_Add = (a, b) => new TypedReference<decimal>(a + b);
-
-
-            GenericAdd<short, sbyte>.Op_Add = (a, b) => new TypedReference<int>(a + b);
-            GenericAdd<short, byte>.Op_Add = (a, b) => new TypedReference<int>(a + b);
-            GenericAdd<short, short>.Op_Add = (a, b) => new TypedReference<int>(a + b);
-            GenericAdd<short, ushort>.Op_Add = (a, b) => new TypedReference<int>(a + b);
-            GenericAdd<short, int>.Op_Add = (a, b) => new TypedReference<int>(a + b);
-            GenericAdd<short, uint>.Op_Add = (a, b) => new TypedReference<long>(a + b);
-            GenericAdd<short, long>.Op_Add = (a, b) => new TypedReference<long>(a + b);
-            GenericAdd<short, ulong>.Op_Add = (a, b) => new TypedReference<ulong>((ulong)a + b);
-            GenericAdd<short, float>.Op_Add = (a, b) => new TypedReference<float>(a + b);
-            GenericAdd<short, double>.Op_Add = (a, b) => new TypedReference<double>(a + b);
-            GenericAdd<short, decimal>.Op_Add = (a, b) => new TypedReference<decimal>(a + b);
+            GenericAdd<byte, sbyte>.Op_Add = (a, b) => new RuntimeTypedReference<int>(a + b);
+            GenericAdd<byte, byte>.Op_Add = (a, b) => new RuntimeTypedReference<int>(a + b);
+            GenericAdd<byte, short>.Op_Add = (a, b) => new RuntimeTypedReference<int>(a + b);
+            GenericAdd<byte, ushort>.Op_Add = (a, b) => new RuntimeTypedReference<int>(a + b);
+            GenericAdd<byte, int>.Op_Add = (a, b) => new RuntimeTypedReference<int>(a + b);
+            GenericAdd<byte, uint>.Op_Add = (a, b) => new RuntimeTypedReference<uint>(a + b);
+            GenericAdd<byte, long>.Op_Add = (a, b) => new RuntimeTypedReference<long>(a + b);
+            GenericAdd<byte, ulong>.Op_Add = (a, b) => new RuntimeTypedReference<ulong>((ulong)a + b);
+            GenericAdd<byte, float>.Op_Add = (a, b) => new RuntimeTypedReference<float>(a + b);
+            GenericAdd<byte, double>.Op_Add = (a, b) => new RuntimeTypedReference<double>(a + b);
+            GenericAdd<byte, decimal>.Op_Add = (a, b) => new RuntimeTypedReference<decimal>(a + b);
 
 
-
-            GenericAdd<ushort, sbyte>.Op_Add = (a, b) => new TypedReference<int>(a + b);
-            GenericAdd<ushort, byte>.Op_Add = (a, b) => new TypedReference<int>(a + b);
-            GenericAdd<ushort, short>.Op_Add = (a, b) => new TypedReference<int>(a + b);
-            GenericAdd<ushort, ushort>.Op_Add = (a, b) => new TypedReference<int>(a + b);
-            GenericAdd<ushort, int>.Op_Add = (a, b) => new TypedReference<int>(a + b);
-            GenericAdd<ushort, uint>.Op_Add = (a, b) => new TypedReference<uint>(a + b);
-            GenericAdd<ushort, long>.Op_Add = (a, b) => new TypedReference<long>(a + b);
-            GenericAdd<ushort, ulong>.Op_Add = (a, b) => new TypedReference<ulong>((ulong)a + b);
-            GenericAdd<ushort, float>.Op_Add = (a, b) => new TypedReference<float>(a + b);
-            GenericAdd<ushort, double>.Op_Add = (a, b) => new TypedReference<double>(a + b);
-            GenericAdd<ushort, decimal>.Op_Add = (a, b) => new TypedReference<decimal>(a + b);
+            GenericAdd<short, sbyte>.Op_Add = (a, b) => new RuntimeTypedReference<int>(a + b);
+            GenericAdd<short, byte>.Op_Add = (a, b) => new RuntimeTypedReference<int>(a + b);
+            GenericAdd<short, short>.Op_Add = (a, b) => new RuntimeTypedReference<int>(a + b);
+            GenericAdd<short, ushort>.Op_Add = (a, b) => new RuntimeTypedReference<int>(a + b);
+            GenericAdd<short, int>.Op_Add = (a, b) => new RuntimeTypedReference<int>(a + b);
+            GenericAdd<short, uint>.Op_Add = (a, b) => new RuntimeTypedReference<long>(a + b);
+            GenericAdd<short, long>.Op_Add = (a, b) => new RuntimeTypedReference<long>(a + b);
+            GenericAdd<short, ulong>.Op_Add = (a, b) => new RuntimeTypedReference<ulong>((ulong)a + b);
+            GenericAdd<short, float>.Op_Add = (a, b) => new RuntimeTypedReference<float>(a + b);
+            GenericAdd<short, double>.Op_Add = (a, b) => new RuntimeTypedReference<double>(a + b);
+            GenericAdd<short, decimal>.Op_Add = (a, b) => new RuntimeTypedReference<decimal>(a + b);
 
 
 
-
-            GenericAdd<int, sbyte>.Op_Add = (a, b) => new TypedReference<int>(a + b);
-            GenericAdd<int, byte>.Op_Add = (a, b) => new TypedReference<int>(a + b);
-            GenericAdd<int, short>.Op_Add = (a, b) => new TypedReference<int>(a + b);
-            GenericAdd<int, ushort>.Op_Add = (a, b) => new TypedReference<int>(a + b);
-            GenericAdd<int, int>.Op_Add = (a, b) => new TypedReference<int>(a + b);
-            GenericAdd<int, uint>.Op_Add = (a, b) => new TypedReference<long>(a + b);
-            GenericAdd<int, long>.Op_Add = (a, b) => new TypedReference<long>(a + b);
-            GenericAdd<int, ulong>.Op_Add = (a, b) => new TypedReference<ulong>((ulong)a + b);
-            GenericAdd<int, float>.Op_Add = (a, b) => new TypedReference<float>(a + b);
-            GenericAdd<int, double>.Op_Add = (a, b) => new TypedReference<double>(a + b);
-            GenericAdd<int, decimal>.Op_Add = (a, b) => new TypedReference<decimal>(a + b);
-
+            GenericAdd<ushort, sbyte>.Op_Add = (a, b) => new RuntimeTypedReference<int>(a + b);
+            GenericAdd<ushort, byte>.Op_Add = (a, b) => new RuntimeTypedReference<int>(a + b);
+            GenericAdd<ushort, short>.Op_Add = (a, b) => new RuntimeTypedReference<int>(a + b);
+            GenericAdd<ushort, ushort>.Op_Add = (a, b) => new RuntimeTypedReference<int>(a + b);
+            GenericAdd<ushort, int>.Op_Add = (a, b) => new RuntimeTypedReference<int>(a + b);
+            GenericAdd<ushort, uint>.Op_Add = (a, b) => new RuntimeTypedReference<uint>(a + b);
+            GenericAdd<ushort, long>.Op_Add = (a, b) => new RuntimeTypedReference<long>(a + b);
+            GenericAdd<ushort, ulong>.Op_Add = (a, b) => new RuntimeTypedReference<ulong>((ulong)a + b);
+            GenericAdd<ushort, float>.Op_Add = (a, b) => new RuntimeTypedReference<float>(a + b);
+            GenericAdd<ushort, double>.Op_Add = (a, b) => new RuntimeTypedReference<double>(a + b);
+            GenericAdd<ushort, decimal>.Op_Add = (a, b) => new RuntimeTypedReference<decimal>(a + b);
 
 
-            GenericAdd<uint, sbyte>.Op_Add = (a, b) => new TypedReference<long>(a + b);
-            GenericAdd<uint, byte>.Op_Add = (a, b) => new TypedReference<uint>(a + b);
-            GenericAdd<uint, short>.Op_Add = (a, b) => new TypedReference<long>(a + b);
-            GenericAdd<uint, ushort>.Op_Add = (a, b) => new TypedReference<uint>(a + b);
-            GenericAdd<uint, int>.Op_Add = (a, b) => new TypedReference<long>(a + b);
-            GenericAdd<uint, uint>.Op_Add = (a, b) => new TypedReference<uint>(a + b);
-            GenericAdd<uint, long>.Op_Add = (a, b) => new TypedReference<long>(a + b);
-            GenericAdd<uint, ulong>.Op_Add = (a, b) => new TypedReference<ulong>((ulong)a + b);
-            GenericAdd<uint, float>.Op_Add = (a, b) => new TypedReference<float>(a + b);
-            GenericAdd<uint, double>.Op_Add = (a, b) => new TypedReference<double>(a + b);
-            GenericAdd<uint, decimal>.Op_Add = (a, b) => new TypedReference<decimal>(a + b);
 
-            GenericAdd<long, sbyte>.Op_Add = (a, b) => new TypedReference<long>(a + b);
-            GenericAdd<long, byte>.Op_Add = (a, b) => new TypedReference<long>(a + b);
-            GenericAdd<long, short>.Op_Add = (a, b) => new TypedReference<long>(a + b);
-            GenericAdd<long, ushort>.Op_Add = (a, b) => new TypedReference<long>(a + b);
-            GenericAdd<long, int>.Op_Add = (a, b) => new TypedReference<long>(a + b);
-            GenericAdd<long, uint>.Op_Add = (a, b) => new TypedReference<long>(a + b);
-            GenericAdd<long, long>.Op_Add = (a, b) => new TypedReference<long>(a + b);
-            GenericAdd<long, ulong>.Op_Add = (a, b) => new TypedReference<ulong>((ulong)a + b);
-            GenericAdd<long, float>.Op_Add = (a, b) => new TypedReference<float>(a + b);
-            GenericAdd<long, double>.Op_Add = (a, b) => new TypedReference<double>(a + b);
-            GenericAdd<long, decimal>.Op_Add = (a, b) => new TypedReference<decimal>(a + b);
 
-            GenericAdd<ulong, sbyte>.Op_Add = (a, b) => new TypedReference<ulong>(a + (ulong)b);
-            GenericAdd<ulong, byte>.Op_Add = (a, b) => new TypedReference<ulong>(a + b);
-            GenericAdd<ulong, short>.Op_Add = (a, b) => new TypedReference<ulong>(a + (ulong)b);
-            GenericAdd<ulong, ushort>.Op_Add = (a, b) => new TypedReference<ulong>(a + b);
-            GenericAdd<ulong, int>.Op_Add = (a, b) => new TypedReference<ulong>(a + (ulong)b);
-            GenericAdd<ulong, uint>.Op_Add = (a, b) => new TypedReference<ulong>(a + b);
-            GenericAdd<ulong, long>.Op_Add = (a, b) => new TypedReference<ulong>(a + (ulong)b);
-            GenericAdd<ulong, ulong>.Op_Add = (a, b) => new TypedReference<ulong>(a + b);
-            GenericAdd<ulong, float>.Op_Add = (a, b) => new TypedReference<float>(a + b);
-            GenericAdd<ulong, double>.Op_Add = (a, b) => new TypedReference<double>(a + b);
-            GenericAdd<ulong, decimal>.Op_Add = (a, b) => new TypedReference<decimal>(a + b);
+            GenericAdd<int, sbyte>.Op_Add = (a, b) => new RuntimeTypedReference<int>(a + b);
+            GenericAdd<int, byte>.Op_Add = (a, b) => new RuntimeTypedReference<int>(a + b);
+            GenericAdd<int, short>.Op_Add = (a, b) => new RuntimeTypedReference<int>(a + b);
+            GenericAdd<int, ushort>.Op_Add = (a, b) => new RuntimeTypedReference<int>(a + b);
+            GenericAdd<int, int>.Op_Add = (a, b) => new RuntimeTypedReference<int>(a + b);
+            GenericAdd<int, uint>.Op_Add = (a, b) => new RuntimeTypedReference<long>(a + b);
+            GenericAdd<int, long>.Op_Add = (a, b) => new RuntimeTypedReference<long>(a + b);
+            GenericAdd<int, ulong>.Op_Add = (a, b) => new RuntimeTypedReference<ulong>((ulong)a + b);
+            GenericAdd<int, float>.Op_Add = (a, b) => new RuntimeTypedReference<float>(a + b);
+            GenericAdd<int, double>.Op_Add = (a, b) => new RuntimeTypedReference<double>(a + b);
+            GenericAdd<int, decimal>.Op_Add = (a, b) => new RuntimeTypedReference<decimal>(a + b);
 
-            GenericAdd<float, sbyte>.Op_Add = (a, b) => new TypedReference<float>(a + b);
-            GenericAdd<float, byte>.Op_Add = (a, b) => new TypedReference<float>(a + b);
-            GenericAdd<float, short>.Op_Add = (a, b) => new TypedReference<float>(a + b);
-            GenericAdd<float, ushort>.Op_Add = (a, b) => new TypedReference<float>(a + b);
-            GenericAdd<float, int>.Op_Add = (a, b) => new TypedReference<float>(a + b);
-            GenericAdd<float, uint>.Op_Add = (a, b) => new TypedReference<float>(a + b);
-            GenericAdd<float, long>.Op_Add = (a, b) => new TypedReference<float>(a + b);
-            GenericAdd<float, ulong>.Op_Add = (a, b) => new TypedReference<float>(a + b);
-            GenericAdd<float, float>.Op_Add = (a, b) => new TypedReference<float>(a + b);
-            GenericAdd<float, double>.Op_Add = (a, b) => new TypedReference<double>(a + b);
-            GenericAdd<float, decimal>.Op_Add = (a, b) => new TypedReference<decimal>((decimal)a + b);
 
-            GenericAdd<double, sbyte>.Op_Add = (a, b) => new TypedReference<double>(a + b);
-            GenericAdd<double, byte>.Op_Add = (a, b) => new TypedReference<double>(a + b);
-            GenericAdd<double, short>.Op_Add = (a, b) => new TypedReference<double>(a + b);
-            GenericAdd<double, ushort>.Op_Add = (a, b) => new TypedReference<double>(a + b);
-            GenericAdd<double, int>.Op_Add = (a, b) => new TypedReference<double>(a + b);
-            GenericAdd<double, uint>.Op_Add = (a, b) => new TypedReference<double>(a + b);
-            GenericAdd<double, long>.Op_Add = (a, b) => new TypedReference<double>(a + b);
-            GenericAdd<double, ulong>.Op_Add = (a, b) => new TypedReference<double>(a + b);
-            GenericAdd<double, float>.Op_Add = (a, b) => new TypedReference<double>(a + b);
-            GenericAdd<double, double>.Op_Add = (a, b) => new TypedReference<double>(a + b);
-            GenericAdd<double, decimal>.Op_Add = (a, b) => new TypedReference<decimal>((decimal)a + b);
 
-            GenericAdd<decimal, sbyte>.Op_Add = (a, b) => new TypedReference<decimal>(a + b);
-            GenericAdd<decimal, byte>.Op_Add = (a, b) => new TypedReference<decimal>(a + b);
-            GenericAdd<decimal, short>.Op_Add = (a, b) => new TypedReference<decimal>(a + b);
-            GenericAdd<decimal, ushort>.Op_Add = (a, b) => new TypedReference<decimal>(a + b);
-            GenericAdd<decimal, int>.Op_Add = (a, b) => new TypedReference<decimal>(a + b);
-            GenericAdd<decimal, uint>.Op_Add = (a, b) => new TypedReference<decimal>(a + b);
-            GenericAdd<decimal, long>.Op_Add = (a, b) => new TypedReference<decimal>(a + b);
-            GenericAdd<decimal, ulong>.Op_Add = (a, b) => new TypedReference<decimal>(a + b);
-            GenericAdd<decimal, float>.Op_Add = (a, b) => new TypedReference<decimal>(a + (decimal)b);
-            GenericAdd<decimal, double>.Op_Add = (a, b) => new TypedReference<decimal>(a + (decimal)b);
-            GenericAdd<decimal, decimal>.Op_Add = (a, b) => new TypedReference<decimal>(a + b);
+            GenericAdd<uint, sbyte>.Op_Add = (a, b) => new RuntimeTypedReference<long>(a + b);
+            GenericAdd<uint, byte>.Op_Add = (a, b) => new RuntimeTypedReference<uint>(a + b);
+            GenericAdd<uint, short>.Op_Add = (a, b) => new RuntimeTypedReference<long>(a + b);
+            GenericAdd<uint, ushort>.Op_Add = (a, b) => new RuntimeTypedReference<uint>(a + b);
+            GenericAdd<uint, int>.Op_Add = (a, b) => new RuntimeTypedReference<long>(a + b);
+            GenericAdd<uint, uint>.Op_Add = (a, b) => new RuntimeTypedReference<uint>(a + b);
+            GenericAdd<uint, long>.Op_Add = (a, b) => new RuntimeTypedReference<long>(a + b);
+            GenericAdd<uint, ulong>.Op_Add = (a, b) => new RuntimeTypedReference<ulong>((ulong)a + b);
+            GenericAdd<uint, float>.Op_Add = (a, b) => new RuntimeTypedReference<float>(a + b);
+            GenericAdd<uint, double>.Op_Add = (a, b) => new RuntimeTypedReference<double>(a + b);
+            GenericAdd<uint, decimal>.Op_Add = (a, b) => new RuntimeTypedReference<decimal>(a + b);
+
+            GenericAdd<long, sbyte>.Op_Add = (a, b) => new RuntimeTypedReference<long>(a + b);
+            GenericAdd<long, byte>.Op_Add = (a, b) => new RuntimeTypedReference<long>(a + b);
+            GenericAdd<long, short>.Op_Add = (a, b) => new RuntimeTypedReference<long>(a + b);
+            GenericAdd<long, ushort>.Op_Add = (a, b) => new RuntimeTypedReference<long>(a + b);
+            GenericAdd<long, int>.Op_Add = (a, b) => new RuntimeTypedReference<long>(a + b);
+            GenericAdd<long, uint>.Op_Add = (a, b) => new RuntimeTypedReference<long>(a + b);
+            GenericAdd<long, long>.Op_Add = (a, b) => new RuntimeTypedReference<long>(a + b);
+            GenericAdd<long, ulong>.Op_Add = (a, b) => new RuntimeTypedReference<ulong>((ulong)a + b);
+            GenericAdd<long, float>.Op_Add = (a, b) => new RuntimeTypedReference<float>(a + b);
+            GenericAdd<long, double>.Op_Add = (a, b) => new RuntimeTypedReference<double>(a + b);
+            GenericAdd<long, decimal>.Op_Add = (a, b) => new RuntimeTypedReference<decimal>(a + b);
+
+            GenericAdd<ulong, sbyte>.Op_Add = (a, b) => new RuntimeTypedReference<ulong>(a + (ulong)b);
+            GenericAdd<ulong, byte>.Op_Add = (a, b) => new RuntimeTypedReference<ulong>(a + b);
+            GenericAdd<ulong, short>.Op_Add = (a, b) => new RuntimeTypedReference<ulong>(a + (ulong)b);
+            GenericAdd<ulong, ushort>.Op_Add = (a, b) => new RuntimeTypedReference<ulong>(a + b);
+            GenericAdd<ulong, int>.Op_Add = (a, b) => new RuntimeTypedReference<ulong>(a + (ulong)b);
+            GenericAdd<ulong, uint>.Op_Add = (a, b) => new RuntimeTypedReference<ulong>(a + b);
+            GenericAdd<ulong, long>.Op_Add = (a, b) => new RuntimeTypedReference<ulong>(a + (ulong)b);
+            GenericAdd<ulong, ulong>.Op_Add = (a, b) => new RuntimeTypedReference<ulong>(a + b);
+            GenericAdd<ulong, float>.Op_Add = (a, b) => new RuntimeTypedReference<float>(a + b);
+            GenericAdd<ulong, double>.Op_Add = (a, b) => new RuntimeTypedReference<double>(a + b);
+            GenericAdd<ulong, decimal>.Op_Add = (a, b) => new RuntimeTypedReference<decimal>(a + b);
+
+            GenericAdd<float, sbyte>.Op_Add = (a, b) => new RuntimeTypedReference<float>(a + b);
+            GenericAdd<float, byte>.Op_Add = (a, b) => new RuntimeTypedReference<float>(a + b);
+            GenericAdd<float, short>.Op_Add = (a, b) => new RuntimeTypedReference<float>(a + b);
+            GenericAdd<float, ushort>.Op_Add = (a, b) => new RuntimeTypedReference<float>(a + b);
+            GenericAdd<float, int>.Op_Add = (a, b) => new RuntimeTypedReference<float>(a + b);
+            GenericAdd<float, uint>.Op_Add = (a, b) => new RuntimeTypedReference<float>(a + b);
+            GenericAdd<float, long>.Op_Add = (a, b) => new RuntimeTypedReference<float>(a + b);
+            GenericAdd<float, ulong>.Op_Add = (a, b) => new RuntimeTypedReference<float>(a + b);
+            GenericAdd<float, float>.Op_Add = (a, b) => new RuntimeTypedReference<float>(a + b);
+            GenericAdd<float, double>.Op_Add = (a, b) => new RuntimeTypedReference<double>(a + b);
+            GenericAdd<float, decimal>.Op_Add = (a, b) => new RuntimeTypedReference<decimal>((decimal)a + b);
+
+            GenericAdd<double, sbyte>.Op_Add = (a, b) => new RuntimeTypedReference<double>(a + b);
+            GenericAdd<double, byte>.Op_Add = (a, b) => new RuntimeTypedReference<double>(a + b);
+            GenericAdd<double, short>.Op_Add = (a, b) => new RuntimeTypedReference<double>(a + b);
+            GenericAdd<double, ushort>.Op_Add = (a, b) => new RuntimeTypedReference<double>(a + b);
+            GenericAdd<double, int>.Op_Add = (a, b) => new RuntimeTypedReference<double>(a + b);
+            GenericAdd<double, uint>.Op_Add = (a, b) => new RuntimeTypedReference<double>(a + b);
+            GenericAdd<double, long>.Op_Add = (a, b) => new RuntimeTypedReference<double>(a + b);
+            GenericAdd<double, ulong>.Op_Add = (a, b) => new RuntimeTypedReference<double>(a + b);
+            GenericAdd<double, float>.Op_Add = (a, b) => new RuntimeTypedReference<double>(a + b);
+            GenericAdd<double, double>.Op_Add = (a, b) => new RuntimeTypedReference<double>(a + b);
+            GenericAdd<double, decimal>.Op_Add = (a, b) => new RuntimeTypedReference<decimal>((decimal)a + b);
+
+            GenericAdd<decimal, sbyte>.Op_Add = (a, b) => new RuntimeTypedReference<decimal>(a + b);
+            GenericAdd<decimal, byte>.Op_Add = (a, b) => new RuntimeTypedReference<decimal>(a + b);
+            GenericAdd<decimal, short>.Op_Add = (a, b) => new RuntimeTypedReference<decimal>(a + b);
+            GenericAdd<decimal, ushort>.Op_Add = (a, b) => new RuntimeTypedReference<decimal>(a + b);
+            GenericAdd<decimal, int>.Op_Add = (a, b) => new RuntimeTypedReference<decimal>(a + b);
+            GenericAdd<decimal, uint>.Op_Add = (a, b) => new RuntimeTypedReference<decimal>(a + b);
+            GenericAdd<decimal, long>.Op_Add = (a, b) => new RuntimeTypedReference<decimal>(a + b);
+            GenericAdd<decimal, ulong>.Op_Add = (a, b) => new RuntimeTypedReference<decimal>(a + b);
+            GenericAdd<decimal, float>.Op_Add = (a, b) => new RuntimeTypedReference<decimal>(a + (decimal)b);
+            GenericAdd<decimal, double>.Op_Add = (a, b) => new RuntimeTypedReference<decimal>(a + (decimal)b);
+            GenericAdd<decimal, decimal>.Op_Add = (a, b) => new RuntimeTypedReference<decimal>(a + b);
 
 
         }
@@ -211,7 +211,7 @@ namespace System.Runtime.ConversionServices
 
     public struct GenericAdd<T1, T2>
     {
-        public static Func<T1, T2, ITypedReference> Op_Add = null;
+        public static Func<T1, T2, IRuntimeTypedReference> Op_Add = null;
         //public static Func<ITypedReference, ITypedReference, ITypedReference> Add =
         //    (a, b) => Op_Add((T1)a.BoxedValue, (T2)b.BoxedValue);
         //public static ITypedReference Add(ITypedReference a, ITypedReference b)
@@ -239,10 +239,10 @@ namespace System.Runtime.ConversionServices
     }
     public class TypedReferenceFactory
     {
-        static ConcurrentDictionary<Type, ITypedReference> typedReferenceCache
-           = new ConcurrentDictionary<Type, ITypedReference>();
+        static ConcurrentDictionary<Type, IRuntimeTypedReference> typedReferenceCache
+           = new ConcurrentDictionary<Type, IRuntimeTypedReference>();
 
-        public static ITypedReference GetTypedReference(object objectReference)
+        public static IRuntimeTypedReference GetTypedReference(object objectReference)
         {
             return typedReferenceCache.
                 GetOrAdd(objectReference.GetType(), (x) => CreateTypedReference(x))
@@ -250,7 +250,7 @@ namespace System.Runtime.ConversionServices
                 .SetValue(objectReference); ;
         }
 
-        public static ITypedReference GetTypedReference<T>(T typeReference)
+        public static IRuntimeTypedReference GetTypedReference<T>(T typeReference)
         {
             var genericType = typeof(T);
             if (genericType == typeof(object)) return GetTypedReference(typeReference);
@@ -258,20 +258,20 @@ namespace System.Runtime.ConversionServices
             var reference = typedReferenceCache.
                 GetOrAdd(typeof(T), (x) => CreateTypedReference(x)).Clone();
             reference.SetValue(typeReference);
-            return (ITypedReference)reference;
+            return (IRuntimeTypedReference)reference;
         }
 
-        internal static ITypedReference BinaryCall
-            (ITypedReference a, ITypedReference b, OperatorType operatorType, OperatorOptions operatorOptions)
+        internal static IRuntimeTypedReference BinaryCall
+            (IRuntimeTypedReference a, IRuntimeTypedReference b, OperatorType operatorType, OperatorOptions operatorOptions)
         {
             return a.BinaryCall(b, operatorType, operatorOptions);
         }
 
-        private static ITypedReference CreateTypedReference(Type x)
+        private static IRuntimeTypedReference CreateTypedReference(Type x)
         {
-            var genericReferenceType = typeof(TypedReference<>).MakeGenericType(x);
+            var genericReferenceType = typeof(RuntimeTypedReference<>).MakeGenericType(x);
             var instance = Activator.CreateInstance(genericReferenceType);
-            return (ITypedReference)instance;
+            return (IRuntimeTypedReference)instance;
         }
     }
 
@@ -280,7 +280,7 @@ namespace System.Runtime.ConversionServices
     public struct ObjectReference : IObjectReference
     {
         object Value;
-        public ITypedReference TypedReference { get; private set; }
+        public IRuntimeTypedReference TypedReference { get; private set; }
         public ObjectReference(object value)
         {
             this.Value = value;
@@ -289,31 +289,31 @@ namespace System.Runtime.ConversionServices
     }
 
 
-    public interface ITypedReference : IGeneric
+    public interface IRuntimeTypedReference : IGeneric
     {
         T Cast<T>();
         T DirectCast<T>();
         object BoxedValue { get; }
-        Type GenericType { get; }
-        ITypedReference Clone(); //interface to create new instances of TypedReference<T> without using reflection
-        ITypedReference SetValue(object objectReference); // interface to unbox object references
+        Type GenericArgumentType { get; }
+        IRuntimeTypedReference Clone(); //interface to create new instances of TypedReference<T> without using reflection
+        IRuntimeTypedReference SetValue(object objectReference); // interface to unbox object references
 
         //can we turn this into a generic pattern.
-        ITypedReference Add(ITypedReference other);
-        ITypedReference Add<TOther>(TypedReference<TOther> other);
-        TOut Add<TOut>(ITypedReference other);
+        IRuntimeTypedReference Add(IRuntimeTypedReference other);
+        IRuntimeTypedReference Add<TOther>(RuntimeTypedReference<TOther> other);
+        TOut Add<TOut>(IRuntimeTypedReference other);
 
-        ITypedReference BinaryCall(ITypedReference other, OperatorType opType);
-        ITypedReference BinaryCall(ITypedReference other, OperatorType opType, OperatorOptions operatorOptions);
-        ITypedReference BinaryCallHandler<TOther>(TypedReference<TOther> other, OperatorType opType);
-        ITypedReference BinaryCallHandler<TOther>(TypedReference<TOther> other, OperatorType opType, OperatorOptions operatorOptions);
+        IRuntimeTypedReference BinaryCall(IRuntimeTypedReference other, OperatorType opType);
+        IRuntimeTypedReference BinaryCall(IRuntimeTypedReference other, OperatorType opType, OperatorOptions operatorOptions);
+        IRuntimeTypedReference BinaryCallHandler<TOther>(RuntimeTypedReference<TOther> other, OperatorType opType);
+        IRuntimeTypedReference BinaryCallHandler<TOther>(RuntimeTypedReference<TOther> other, OperatorType opType, OperatorOptions operatorOptions);
 
 
     }
 
     public struct OperandFactory<T1, T2>
     {
-        public static ITypedReference Call
+        public static IRuntimeTypedReference Call
             (T1 a, T2 b, OperatorType operatorType, OperatorOptions none)
         {
             //TODO: We don't wan't to have to switch on every operator call.
@@ -333,7 +333,7 @@ namespace System.Runtime.ConversionServices
         }
     }
 
-    public struct TypedReference<T> : ITypedReference//, IGenericType<T>
+    public struct RuntimeTypedReference<T> : IRuntimeTypedReference//, IGenericType<T>
     {
         public T TDefault() => default(T);
 
@@ -342,60 +342,60 @@ namespace System.Runtime.ConversionServices
 
 
         public T Value;
-        public static Type GenericTypeCache => typeof(T);
-        public Type GenericType => GenericTypeCache;
+        public static Type GenericArgumentTypeCache => typeof(T);
+        public Type GenericArgumentType => GenericArgumentTypeCache;
         public object BoxedValue => Value;
 
 
 
-        public TypedReference(T value) => this.Value = value;
+        public RuntimeTypedReference(T value) => this.Value = value;
         public TOut Cast<TOut>() => TypedReferenceConverter<T, TOut>.Convert(Value);
         public TOut DirectCast<TOut>() => (TOut)(object)Value;
-        public ITypedReference Clone()
+        public IRuntimeTypedReference Clone()
         {
             return SetValue(this, default(T));
         }
-        public ITypedReference SetValue(object objectReference)
+        public IRuntimeTypedReference SetValue(object objectReference)
         {
             return SetValue(this, objectReference);
         }
-        private ITypedReference SetValue(ITypedReference typedReference, object objectReference)
+        private IRuntimeTypedReference SetValue(IRuntimeTypedReference typedReference, object objectReference)
         {
-            var other = (TypedReference<T>)typedReference;
+            var other = (RuntimeTypedReference<T>)typedReference;
             other.Value = (T)objectReference;
-            return (ITypedReference)other;
+            return (IRuntimeTypedReference)other;
         }
 
-        public ITypedReference BinaryCall(ITypedReference other, OperatorType operatorType)
+        public IRuntimeTypedReference BinaryCall(IRuntimeTypedReference other, OperatorType operatorType)
         {
             return other.BinaryCallHandler<T>(this, operatorType, OperatorOptions.None);
         }
-        public ITypedReference BinaryCall(ITypedReference other, OperatorType operatorType, OperatorOptions operatorOptions)
+        public IRuntimeTypedReference BinaryCall(IRuntimeTypedReference other, OperatorType operatorType, OperatorOptions operatorOptions)
         {
             return other.BinaryCallHandler<T>(this, operatorType, operatorOptions);
         }
-        public ITypedReference BinaryCallHandler<TOther>(TypedReference<TOther> other, OperatorType operatorType)
+        public IRuntimeTypedReference BinaryCallHandler<TOther>(RuntimeTypedReference<TOther> other, OperatorType operatorType)
         {
             return OperandFactory<T, TOther>.Call(this.Value, other.Value, operatorType, OperatorOptions.None);
         }
-        public ITypedReference BinaryCallHandler<TOther>(TypedReference<TOther> other, OperatorType operatorType, OperatorOptions operatorOptions)
+        public IRuntimeTypedReference BinaryCallHandler<TOther>(RuntimeTypedReference<TOther> other, OperatorType operatorType, OperatorOptions operatorOptions)
         {
             return OperandFactory<T, TOther>.Call(this.Value, other.Value, operatorType, operatorOptions);
         }
 
-        public ITypedReference Add(ITypedReference other)
+        public IRuntimeTypedReference Add(IRuntimeTypedReference other)
         {
             return other.Add<T>(this);
         }
-        public TOther Add<TOther>(ITypedReference other)
+        public TOther Add<TOther>(IRuntimeTypedReference other)
         {
             var result = other.Add<T>(this);
-            if (result.GenericType != typeof(TOther))
+            if (result.GenericArgumentType != typeof(TOther))
                 return result.Cast<TOther>();
             return (TOther)result.BoxedValue;
         }
 
-        public ITypedReference Add<TOther>(TypedReference<TOther> other)
+        public IRuntimeTypedReference Add<TOther>(RuntimeTypedReference<TOther> other)
         {
             var thisRefType = typeof(T);
             var thisType = Value.GetType();
@@ -406,8 +406,8 @@ namespace System.Runtime.ConversionServices
 
 
 
-        public static implicit operator T(TypedReference<T> typedReference) => typedReference.Value;
-        public static explicit operator TypedReference<T>(T value) => (TypedReference<T>)TypedReferenceFactory.GetTypedReference<T>(value);
+        public static implicit operator T(RuntimeTypedReference<T> typedReference) => typedReference.Value;
+        public static explicit operator RuntimeTypedReference<T>(T value) => (RuntimeTypedReference<T>)TypedReferenceFactory.GetTypedReference<T>(value);
     }
 
     public struct TypedReferenceConverter<T, TOut>
@@ -423,11 +423,11 @@ namespace System.Runtime.ConversionServices
         //        return objectReference;
         //    return new ObjectReference(value);
         //}
-        public static ITypedReference ToTypedReference<T>(this T value)
+        public static IRuntimeTypedReference ToTypedReference<T>(this T value)
         {
             if (value is ObjectReference objectReference)
                 return objectReference.TypedReference;
-            if (value.GetType() != typeof(object)) return new TypedReference<T> { Value = value };
+            if (value.GetType() != typeof(object)) return new RuntimeTypedReference<T> { Value = value };
             return new ObjectReference(value).TypedReference;
         }
         //public static TypedReference<T> ToTypedReference<T>(this T value)
@@ -438,21 +438,18 @@ namespace System.Runtime.ConversionServices
         //    return (TypedReference<T>)new ObjectReference(value).TypedReference;
         //}
 
-        public static IGenericArithmetic ToArithmetic(this ITypedReference value)
+        public static IGenericArithmetic ToArithmetic(this IRuntimeTypedReference value)
         {
             return value.Generic.Arithmetic;
         }
     
 
-        public static ArithmeticTest<T> ToArithmetic<T>(this TypedReference<T> value)
+        public static Arithmetic<T> ToArithmetic<T>(this RuntimeTypedReference<T> value)
         {
-
-            return new ArithmeticTest<T> { Value = value.Value };
-
-
+            return new Arithmetic<T> { Value = value.Value };
         }
 
-        public static ITypedReference ToTypedReference(this object value)
+        public static IRuntimeTypedReference ToTypedReference(this object value)
         {
             if (value is ObjectReference objectReference)
                 return objectReference.TypedReference;
@@ -461,7 +458,7 @@ namespace System.Runtime.ConversionServices
         public static T
             Cast<T>(this ObjectReference objectReference) => objectReference.TypedReference.Cast<T>();
         public static T
-           Cast<T>(this ITypedReference typedReference) => typedReference.Cast<T>();
+           Cast<T>(this IRuntimeTypedReference typedReference) => typedReference.Cast<T>();
 
 
         public static T

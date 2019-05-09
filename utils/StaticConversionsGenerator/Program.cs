@@ -114,7 +114,9 @@ namespace StaticConversionsGenerator
         }
         static void Main(string[] args)
         {
-            //GenericCallFactory.ResolverFactoryTest.Test();
+            GenericRuntimeTypeDefinitionFactory.TestGenericTypeDefinition();
+
+            GenericCallFactory.ResolverFactoryTest.Test();
 
             //GenericBinder.GenericBinderTest.Run();
             ArithmeticFactory.TestInterfaceCall();

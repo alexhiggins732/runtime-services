@@ -4,16 +4,16 @@
     public static class GenericArithmeticExtensions
     {
         public static IGenericArithmetic Arithmetic
-            (this ITypedReference value) //=> new ArithmeticTest<ITypedReference> { Value = value };
+            (this IRuntimeTypedReference value) //=> new ArithmeticTest<ITypedReference> { Value = value };
            => value.Generic.Arithmetic;
-        public static ArithmeticTest<T> Arithmetic<T>
-            (this TypedReference<T> value) => new ArithmeticTest<T> { Value = value.Value };
+        public static Arithmetic<T> Arithmetic<T>
+            (this RuntimeTypedReference<T> value) => new Arithmetic<T> { Value = value.Value };
 
         //public static IGenericArithmetic Arithmetic
         //           (this TypedReference<T> value) => new ArithmeticTest<T> { Value = value.Value };
 
-        public static Func<T, ArithmeticTest<T>> ArithmeticTestFunc<T>(T Instance) => CreateArithmeticTest;
-        public static ArithmeticTest<T> CreateArithmeticTest<T>(T value) => new ArithmeticTest<T> { Value = value };
+        public static Func<T, Arithmetic<T>> ArithmeticTestFunc<T>(T Instance) => CreateArithmeticTest;
+        public static Arithmetic<T> CreateArithmeticTest<T>(T value) => new Arithmetic<T> { Value = value };
         public static IGenericArithmetic Add
             (this IGenericArithmetic value, IGenericArithmetic other)
         {
@@ -22,7 +22,7 @@
         public static IGenericArithmetic Add<T>
          (this IGenericArithmetic value, T other)
         {
-            return value.Op<IAdd>(new ArithmeticTest<T>(other));
+            return value.Op<IAdd>(new Arithmetic<T>(other));
         }
 
         public static IGenericArithmetic AddUnchecked
@@ -33,7 +33,7 @@
         public static IGenericArithmetic Subtract<T>
             (this IGenericArithmetic value, T other)
         {
-            return value.Op<ISubtract>(new ArithmeticTest<T>(other));
+            return value.Op<ISubtract>(new Arithmetic<T>(other));
         }
         public static IGenericArithmetic SubtractUnchecked
             (this IGenericArithmetic value, IGenericArithmetic other)
@@ -46,8 +46,8 @@
 
 
 
-        public static ArithmeticTest<bool>
-            Arithmetic(this bool value) => new ArithmeticTest<bool>(value);
+        public static Arithmetic<bool>
+            Arithmetic(this bool value) => new Arithmetic<bool>(value);
         //public static T
         //   Cast<T>(this char value) => TypedReferenceConverter<char, T>.Convert(value);
         //public static T
@@ -58,7 +58,7 @@
         //    Cast<T>(this short value) => TypedReferenceConverter<short, T>.Convert(value);
         //public static T
         //    Cast<T>(this ushort value) => TypedReferenceConverter<ushort, T>.Convert(value);
-        public static ArithmeticTest<int> ArithmeticTest(this int value) => new ArithmeticTest<int>(value);
+        public static Arithmetic<int> ArithmeticTest(this int value) => new Arithmetic<int>(value);
         //public static T
         //    Cast<T>(this uint value) => TypedReferenceConverter<uint, T>.Convert(value);
         //public static T

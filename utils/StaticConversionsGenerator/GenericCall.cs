@@ -14,14 +14,14 @@ namespace System.Runtime.ConversionServices
     public interface IGenericStruct
     {
         IGenericArithmetic Arithmetic { get; }
-        ITypedReference TypedReference { get; }
+        IRuntimeTypedReference TypedReference { get; }
         TOut To<TOut>();
     }
     public struct Generic<T> : IGenericStruct
     {
         public T Value;
-        public IGenericArithmetic Arithmetic => new ArithmeticTest<T> { Value = Value };
-        public ITypedReference TypedReference => new TypedReference<T> { Value = Value };
+        public IGenericArithmetic Arithmetic => new Arithmetic<T> { Value = Value };
+        public IRuntimeTypedReference TypedReference => new RuntimeTypedReference<T> { Value = Value };
 
         public TOut To<TOut>() => Value.To<TOut>();
     }
@@ -160,7 +160,7 @@ namespace System.Runtime.ConversionServices
         public interface ICallFunc { }
         public interface ICallableUnaryExpression
         {
-            ITypedReference Call(ITypedReference a);
+            IRuntimeTypedReference Call(IRuntimeTypedReference a);
         }
         public interface ICallableBinaryExpression { }
 
