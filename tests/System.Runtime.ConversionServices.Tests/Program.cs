@@ -12,6 +12,9 @@ namespace System.Runtime.ConversionServices.Tests
         public static void Main(string[] args)
         {
 
+            var testClass = new OperandFactoryTests();
+            OperandFactoryTests.RunAllTests();
+
             var intRef = 1.ToObjectReference().Cast<char>();
 
             var intRef2 = 2.ToObjectReference();

@@ -4,11 +4,27 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.ConversionServices.MsilOpcodes.MsilOpcodeInterfaces;
 
 namespace System.Runtime.ConversionServices
 {
+
     public static class OperandGenerator
     {
+        static OperandGenerator()
+        {
+            OpCodeOperation<IOpCode_Neg>.Operation = Operation.Negate;
+            OpCodeOperation<IOpCode_Castclass>.Operation = Operation.Convert;
+            OpCodeOperation<IOpCode_Add>.Operation = Operation.AddUnchecked;
+            OpCodeOperation<IOpCode_Add_ovf>.Operation = Operation.Add;
+            OpCodeOperation<IOpCode_Add_ovf_un>.Operation = Operation.Add;
+            OpCodeOperation<IOpCode_Not>.Operation = Operation.Not;
+        }
+        //TODO:
+        public struct OpCodeOperation<T>
+        {
+            public static Operation Operation;
+        }
         public enum Operation
         {
             None = 0,
@@ -19,7 +35,7 @@ namespace System.Runtime.ConversionServices
             Add,
             AddUnchecked,
             Not
-             
+
         }
 
         public struct Negate<T>
@@ -60,17 +76,17 @@ namespace System.Runtime.ConversionServices
                 {
                     case Operation.AddUnchecked:
                     case Operation.Add:
-                        var converter = Expression.Convert(b,aType);
+                        var converter = Expression.Convert(b, aType);
                         expression = Expression.Add(a, converter);
                         break;
                     //case Operation.AddUnchecked:
                     //    expression = Expression.Add(a, b); ;
                     //    break;
-                   
+
                     default:
                         throw new NotImplementedException();
                 }
-                
+
 
                 result = Expression.Lambda<Func<T1, T2, TOut>>(Expression.Convert(expression, outType), a, b).Compile();
             }
@@ -82,6 +98,11 @@ namespace System.Runtime.ConversionServices
             return result;
         }
 
+        public static Func<TIn, TOut> CreateUnary<TIn, TOut, TOpCode>()
+        {
+            Operation operation = OpCodeOperation<TOpCode>.Operation;
+            return CreateUnary<TIn, TOut>(operation);
+        }
         public static Func<TIn, TOut> CreateUnary<TIn, TOut>(Operation operation)
         {
 
