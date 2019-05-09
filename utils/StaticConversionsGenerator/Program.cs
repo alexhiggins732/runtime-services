@@ -79,7 +79,7 @@ namespace StaticConversionsGenerator
         static T2 OpKeySignatureStub<OpKey, T1, T2>(OpKey a, T1 b) => default(T2);
 
         static Func<OpKey, T1> OpKeySignature<OpKey, T1>(OpKey a, T1 b)
-       => ((d) => OpKeySignatureStub<OpKey, T1>(d));
+        => ((d) => OpKeySignatureStub<OpKey, T1>(d));
 
         static Func<OpKey, T1, T2> OpKeySignature<OpKey, T1, T2>(OpKey a, T1 b, T2 c)
             => ((d, e) => OpKeySignatureStub<OpKey, T1, T2>(d, e));
@@ -112,8 +112,12 @@ namespace StaticConversionsGenerator
             d.Add(r4.GetType(), r);
 
         }
+
         static void Main(string[] args)
         {
+            EnumeratedTypeTest.Run();
+
+            InterfaceGenerator.GenerateEmitOpCodeInterfaces();
             //GenericCallFactory.ResolverFactoryTest.Test();
 
             //GenericBinder.GenericBinderTest.Run();
