@@ -6,6 +6,8 @@
     <IsPackable>false</IsPackable>
 
     <StartupObject>System.Runtime.ConversionServices.Tests.Program</StartupObject>
+
+    <LangVersion>7.1</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

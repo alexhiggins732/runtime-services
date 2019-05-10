@@ -22,7 +22,7 @@ namespace System.Runtime.ConversionServices.Tests
             {
 
                 var defaultValues = typeToTest.GetDefaultValues();
-                if (typeToTest.Type != typeof(BigInt))
+                if (typeToTest.Type != typeof(System.Numerics.BigInteger))
                 {
                     Assert.True(defaultValues.Length == 3);
                 }

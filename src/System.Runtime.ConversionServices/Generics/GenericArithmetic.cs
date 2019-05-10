@@ -2,9 +2,9 @@
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StaticConversionsGenerator
+namespace System.Runtime.ConversionServices
 {
-    public class GenericArithmetic
+    public class GenericArithmeticTest
     {
         public static void Test()
         {
@@ -35,7 +35,10 @@ namespace StaticConversionsGenerator
             byte u1 = 0;
             ushort u2 = 0;
             uint u4 = 1;
-            ulong iu8 = 0;
+            ulong u8 = 0;
+
+            var u1u2 = u1 + u2;
+            var u4u8 = u4 + u8;
 
             var i1i2 = i1 + i2;
             var resultI1I2 = GenericAdder<int, int, int>.Add(i1, i2);
@@ -65,6 +68,8 @@ namespace StaticConversionsGenerator
         public static implicit operator RuntimeReference<T>(T value) => new RuntimeReference<T> { Value = value };
     }
 
+
+    //TODO: Unify GenericAdder, GenericAdder, GenericAdd
     public struct GenericAdder
     {
         public static IRuntimeReference Add(object a, object b)
@@ -79,7 +84,6 @@ namespace StaticConversionsGenerator
     }
 
     public struct GenericAdder<T1, T2, TResult>
-    //: IGenericAdder
     {
         public static Func<T1, T2, TResult> FnAdd = null;
 
@@ -113,11 +117,15 @@ namespace StaticConversionsGenerator
     public struct GenericAdd<T1, T2> : IBinaryOperator
     {
         public static Func<T1, T2, IRuntimeReference> FnAdd = null;
-        public IRuntimeReference OpAdd<TIn1,TIn2> (TIn1 a, TIn2 b) 
+
+        public IRuntimeReference OpAdd<TIn1, TIn2>(TIn1 a, TIn2 b)
             => FnAdd((T1)(object)a, (T2)(object)b);
 
-   
+        public static Func<T1, T2, IRuntimeTypedReference> Op_Add = null;
+
     }
+
+
 
     public interface IBinaryOperator
     {

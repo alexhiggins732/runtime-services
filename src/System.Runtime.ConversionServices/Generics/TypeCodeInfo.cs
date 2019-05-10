@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace StaticConversionsGenerator
+namespace System.Runtime.ConversionServices
 {
     public struct TypeCodeInfo<T> : ITypeCodeInfo
     {

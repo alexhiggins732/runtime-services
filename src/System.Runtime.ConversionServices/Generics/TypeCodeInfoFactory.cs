@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace StaticConversionsGenerator
+namespace System.Runtime.ConversionServices
 {
     public struct TypeCodeInfoFactory
     {

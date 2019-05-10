@@ -12,13 +12,9 @@ namespace System.Runtime.ConversionServices
             var uintref = ((uint)3).ToTypedReference();
 
 
-            var result = GenericArithmetic.Add(intref, sbref);
-
-            var result2 = GenericArithmetic.AddUnchecked<int>(intref, sbref);
-
             //var resultTyped = GenericAdd<int, int>.Add<int>(intref, sbref);
-            var inlineResult = sbref.Add(uintref);
-            var inlineType = sbref.Add<int>(uintref);
+            var inlineResult = sbref.Arithmetic().Add(uintref);
+            var inlineType = sbref.Arithmetic().Add(1);
         }
     }
 
@@ -27,6 +23,7 @@ namespace System.Runtime.ConversionServices
 
     public struct GenericArithmetic
     {
+        //TODO: Move to Arithmetic
         /// <summary>
         /// This method requires operators to be defined on <see cref="RuntimeTypedReference{T}"/>
         ///     Adding adding the numerous operators will make the definition become unweildy.
@@ -35,19 +32,19 @@ namespace System.Runtime.ConversionServices
         /// <param name="a"></param>
         /// <param name="b"></param>
         /// <returns></returns>
-        public static IRuntimeTypedReference Add(IRuntimeTypedReference a, IRuntimeTypedReference b)
-        {
-            return a.Add(b);
-        }
+        //public static IRuntimeTypedReference Add(IRuntimeTypedReference a, IRuntimeTypedReference b)
+        //{
+        //    return a.Add(b);
+        //}
 
-        public static IRuntimeTypedReference AddUnchecked(IRuntimeTypedReference a, IRuntimeTypedReference b)
-        {
-            return TypedReferenceFactory.BinaryCall(a, b, OperatorType.Add, OperatorOptions.Unchecked);
-        }
-        public static T AddUnchecked<T>(IRuntimeTypedReference a, IRuntimeTypedReference b)
-        {
-            return TypedReferenceFactory.BinaryCall(a, b, OperatorType.Add, OperatorOptions.Unchecked).Cast<T>(); ;
-        }
+        //public static IRuntimeTypedReference AddUnchecked(IRuntimeTypedReference a, IRuntimeTypedReference b)
+        //{
+        //    return TypedReferenceFactory.BinaryCall(a, b, OperatorType.Add, OperatorOptions.Unchecked);
+        //}
+        //public static T AddUnchecked<T>(IRuntimeTypedReference a, IRuntimeTypedReference b)
+        //{
+        //    return TypedReferenceFactory.BinaryCall(a, b, OperatorType.Add, OperatorOptions.Unchecked).Cast<T>(); ;
+        //}
 
         static GenericArithmetic()
         {
@@ -209,19 +206,7 @@ namespace System.Runtime.ConversionServices
         }
     }
 
-    public struct GenericAdd<T1, T2>
-    {
-        public static Func<T1, T2, IRuntimeTypedReference> Op_Add = null;
-        //public static Func<ITypedReference, ITypedReference, ITypedReference> Add =
-        //    (a, b) => Op_Add((T1)a.BoxedValue, (T2)b.BoxedValue);
-        //public static ITypedReference Add(ITypedReference a, ITypedReference b)
-        //    => Op_Add((T1)a.BoxedValue, (T2)b.BoxedValue);
 
-        //public static
-        //    TOut Add<TOut>(ITypedReference a, ITypedReference b) => 
-        //    Add(a, b).DirectCast<TOut>();
-
-    }
 
     public enum OperatorType
     {
@@ -261,11 +246,11 @@ namespace System.Runtime.ConversionServices
             return (IRuntimeTypedReference)reference;
         }
 
-        internal static IRuntimeTypedReference BinaryCall
-            (IRuntimeTypedReference a, IRuntimeTypedReference b, OperatorType operatorType, OperatorOptions operatorOptions)
-        {
-            return a.BinaryCall(b, operatorType, operatorOptions);
-        }
+        //internal static IRuntimeTypedReference BinaryCall
+        //    (IRuntimeTypedReference a, IRuntimeTypedReference b, OperatorType operatorType, OperatorOptions operatorOptions)
+        //{
+        //    return a.BinaryCall(b, operatorType, operatorOptions);
+        //}
 
         private static IRuntimeTypedReference CreateTypedReference(Type x)
         {
@@ -295,18 +280,19 @@ namespace System.Runtime.ConversionServices
         T DirectCast<T>();
         object BoxedValue { get; }
         Type GenericArgumentType { get; }
+
         IRuntimeTypedReference Clone(); //interface to create new instances of TypedReference<T> without using reflection
         IRuntimeTypedReference SetValue(object objectReference); // interface to unbox object references
 
         //can we turn this into a generic pattern.
-        IRuntimeTypedReference Add(IRuntimeTypedReference other);
-        IRuntimeTypedReference Add<TOther>(RuntimeTypedReference<TOther> other);
-        TOut Add<TOut>(IRuntimeTypedReference other);
+        //IRuntimeTypedReference Add(IRuntimeTypedReference other);
+        //IRuntimeTypedReference Add<TOther>(RuntimeTypedReference<TOther> other);
+        //TOut Add<TOut>(IRuntimeTypedReference other);
 
-        IRuntimeTypedReference BinaryCall(IRuntimeTypedReference other, OperatorType opType);
-        IRuntimeTypedReference BinaryCall(IRuntimeTypedReference other, OperatorType opType, OperatorOptions operatorOptions);
-        IRuntimeTypedReference BinaryCallHandler<TOther>(RuntimeTypedReference<TOther> other, OperatorType opType);
-        IRuntimeTypedReference BinaryCallHandler<TOther>(RuntimeTypedReference<TOther> other, OperatorType opType, OperatorOptions operatorOptions);
+        //IRuntimeTypedReference BinaryCall(IRuntimeTypedReference other, OperatorType opType);
+        //IRuntimeTypedReference BinaryCall(IRuntimeTypedReference other, OperatorType opType, OperatorOptions operatorOptions);
+        //IRuntimeTypedReference BinaryCallHandler<TOther>(RuntimeTypedReference<TOther> other, OperatorType opType);
+        //IRuntimeTypedReference BinaryCallHandler<TOther>(RuntimeTypedReference<TOther> other, OperatorType opType, OperatorOptions operatorOptions);
 
 
     }
@@ -366,43 +352,43 @@ namespace System.Runtime.ConversionServices
             return (IRuntimeTypedReference)other;
         }
 
-        public IRuntimeTypedReference BinaryCall(IRuntimeTypedReference other, OperatorType operatorType)
-        {
-            return other.BinaryCallHandler<T>(this, operatorType, OperatorOptions.None);
-        }
-        public IRuntimeTypedReference BinaryCall(IRuntimeTypedReference other, OperatorType operatorType, OperatorOptions operatorOptions)
-        {
-            return other.BinaryCallHandler<T>(this, operatorType, operatorOptions);
-        }
-        public IRuntimeTypedReference BinaryCallHandler<TOther>(RuntimeTypedReference<TOther> other, OperatorType operatorType)
-        {
-            return OperandFactory<T, TOther>.Call(this.Value, other.Value, operatorType, OperatorOptions.None);
-        }
-        public IRuntimeTypedReference BinaryCallHandler<TOther>(RuntimeTypedReference<TOther> other, OperatorType operatorType, OperatorOptions operatorOptions)
-        {
-            return OperandFactory<T, TOther>.Call(this.Value, other.Value, operatorType, operatorOptions);
-        }
+        //public IRuntimeTypedReference BinaryCall(IRuntimeTypedReference other, OperatorType operatorType)
+        //{
+        //    return other.BinaryCallHandler<T>(this, operatorType, OperatorOptions.None);
+        //}
+        //public IRuntimeTypedReference BinaryCall(IRuntimeTypedReference other, OperatorType operatorType, OperatorOptions operatorOptions)
+        //{
+        //    return other.BinaryCallHandler<T>(this, operatorType, operatorOptions);
+        //}
+        //public IRuntimeTypedReference BinaryCallHandler<TOther>(RuntimeTypedReference<TOther> other, OperatorType operatorType)
+        //{
+        //    return OperandFactory<T, TOther>.Call(this.Value, other.Value, operatorType, OperatorOptions.None);
+        //}
+        //public IRuntimeTypedReference BinaryCallHandler<TOther>(RuntimeTypedReference<TOther> other, OperatorType operatorType, OperatorOptions operatorOptions)
+        //{
+        //    return OperandFactory<T, TOther>.Call(this.Value, other.Value, operatorType, operatorOptions);
+        //}
 
-        public IRuntimeTypedReference Add(IRuntimeTypedReference other)
-        {
-            return other.Add<T>(this);
-        }
-        public TOther Add<TOther>(IRuntimeTypedReference other)
-        {
-            var result = other.Add<T>(this);
-            if (result.GenericArgumentType != typeof(TOther))
-                return result.Cast<TOther>();
-            return (TOther)result.BoxedValue;
-        }
+        //public IRuntimeTypedReference Add(IRuntimeTypedReference other)
+        //{
+        //    return other.Add<T>(this);
+        //}
+        //public TOther Add<TOther>(IRuntimeTypedReference other)
+        //{
+        //    var result = other.Add<T>(this);
+        //    if (result.GenericArgumentType != typeof(TOther))
+        //        return result.Cast<TOther>();
+        //    return (TOther)result.BoxedValue;
+        //}
 
-        public IRuntimeTypedReference Add<TOther>(RuntimeTypedReference<TOther> other)
-        {
-            var thisRefType = typeof(T);
-            var thisType = Value.GetType();
-            var otherRefType = typeof(TOther);
-            var othertype = other.GetType();
-            return GenericAdd<T, TOther>.Op_Add(this.Value, other.Value);
-        }
+        //public IRuntimeTypedReference Add<TOther>(RuntimeTypedReference<TOther> other)
+        //{
+        //    var thisRefType = typeof(T);
+        //    var thisType = Value.GetType();
+        //    var otherRefType = typeof(TOther);
+        //    var othertype = other.GetType();
+        //    return GenericAdd<T, TOther>.Op_Add(this.Value, other.Value);
+        //}
 
 
 
@@ -438,16 +424,15 @@ namespace System.Runtime.ConversionServices
         //    return (TypedReference<T>)new ObjectReference(value).TypedReference;
         //}
 
-        public static IGenericArithmetic ToArithmetic(this IRuntimeTypedReference value)
-        {
-            return value.Generic.Arithmetic;
-        }
-    
-
-        public static Arithmetic<T> ToArithmetic<T>(this RuntimeTypedReference<T> value)
-        {
-            return new Arithmetic<T> { Value = value.Value };
-        }
+        //TODO: Move to Arithmetic Extensions
+        //public static IGenericArithmetic ToArithmetic(this IRuntimeTypedReference value)
+        //{
+        //    return value.Generic.Arithmetic;
+        //}
+        //public static Arithmetic<T> ToArithmetic<T>(this RuntimeTypedReference<T> value)
+        //{
+        //    return new Arithmetic<T> { Value = value.Value };
+        //}
 
         public static IRuntimeTypedReference ToTypedReference(this object value)
         {

@@ -6,7 +6,7 @@ using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StaticConversionsGenerator
+namespace System.Runtime.ConversionServices
 {
     public class OpCodeHelper
     {

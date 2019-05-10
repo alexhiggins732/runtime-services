@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StaticConversionsGenerator
+namespace System.Runtime.ConversionServices
 {
     public static class StringExtensionMethods
     {

@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Runtime.ConversionServices;
 using System.Reflection;
 
 
-namespace StaticConversionsGenerator
+namespace System.Runtime.ConversionServices
 {
     public static class GenericRuntimeTypeDefinitionExtensions
     {
@@ -21,6 +18,7 @@ namespace StaticConversionsGenerator
         public static IRuntimeTypedReference New(this Type t, params object[] args) => t.RuntimeTypeDefintion().New(args);
 
     }
+
     public class GenericRuntimeTypeDefinitionFactory
     {
         //TODO: Cleanup interface. Expose limited number of top level types
@@ -28,18 +26,21 @@ namespace StaticConversionsGenerator
         {
             //TODO: Did we lose interface cleanup?
             var newFromType = typeof(TestClass).New();
-
+            1.ToTypedReference();
             //TODO: Remove need to cast arge to runtime typed reference
             //TODO: Expose only via Arithmetic interface.
-            newFromType.Add(1.ToTypedReference());
-            newFromType.Add<int>(1.ToTypedReference());
+            //newFromType.Add(1.ToTypedReference());
+            // newFromType.Add<int>(1.ToTypedReference());
             newFromType.Arithmetic();// <- this is okay I think.
+            newFromType.Arithmetic().Add(1);
+            newFromType.Arithmetic().Add<long>(2);
             //TODO: Nested and renamed (maybe op binary)
-            newFromType.BinaryCall(1.ToTypedReference(), OperatorType.Add);
+            //newFromType.BinaryCall(1.ToTypedReference(), OperatorType.Add);
             //TODO: Should this be a method call?
             //TODO: Make explicit interface method and point to T Value;
             var boxed = newFromType.BoxedValue;
         }
+        
         //TODO: Decide on API implementation definition;
         public static void CompileInterfaceUsageTests()
         {
