@@ -1,4 +1,5 @@
 ﻿using System.Collections.Concurrent;
+using System.Reflection;
 using static System.Runtime.ConversionServices.Conversions;
 
 namespace System.Runtime.ConversionServices
@@ -235,6 +236,14 @@ namespace System.Runtime.ConversionServices
                 .SetValue(objectReference); ;
         }
 
+        public static IRuntimeTypedReference GetTypedReference(Type type)
+        {
+            return typedReferenceCache.
+                GetOrAdd(type, (x) => CreateTypedReference(x))
+                .Clone()
+                .SetValue(type.New()); ;
+        }
+
         public static IRuntimeTypedReference GetTypedReference<T>(T typeReference)
         {
             var genericType = typeof(T);
@@ -274,6 +283,9 @@ namespace System.Runtime.ConversionServices
     }
 
 
+    /// <summary>
+    /// Interface to provide Runtime Services for with compiler boxed objects as strongly typed generics at runtime.
+    /// </summary>
     public interface IRuntimeTypedReference : IGeneric
     {
         T Cast<T>();
@@ -328,8 +340,8 @@ namespace System.Runtime.ConversionServices
 
 
         public T Value;
-        public static Type GenericArgumentTypeCache => typeof(T);
-        public Type GenericArgumentType => GenericArgumentTypeCache;
+        public static Type GenericType => typeof(T);
+        public Type GenericArgumentType => GenericType;
         public object BoxedValue => Value;
 
 
@@ -401,6 +413,9 @@ namespace System.Runtime.ConversionServices
         public static Func<T, TOut> Convert = CreateConverter<T, TOut>();
     }
 
+    /// <summary>
+    /// Extensions for working with compiler boxed objects as strongly typed generics at runtime.
+    /// </summary>
     public static class TypedReferenceExtensions
     {
         //public static ObjectReference ToObjectReference(this object value)
@@ -409,6 +424,15 @@ namespace System.Runtime.ConversionServices
         //        return objectReference;
         //    return new ObjectReference(value);
         //}
+
+        public static IRuntimeTypedReference FromFieldInfo(this FieldInfo value)
+                => TypedReferenceFactory.GetTypedReference(value.FieldType);
+
+
+        public static IRuntimeTypedReference FromType(this Type value)
+            => TypedReferenceFactory.GetTypedReference(value);
+   
+
         public static IRuntimeTypedReference ToTypedReference<T>(this T value)
         {
             if (value is ObjectReference objectReference)
@@ -416,6 +440,11 @@ namespace System.Runtime.ConversionServices
             if (value.GetType() != typeof(object)) return new RuntimeTypedReference<T> { Value = value };
             return new ObjectReference(value).TypedReference;
         }
+
+        //TODO: Nice extension when needed but clutter's up intellisense. Performance implication
+        //      Is an extra call of compiled time type back to a TypedReference which SHOULD be minimal.
+        //      If there is a reason to keep the TypedReference<T> around or to expose this api for other purposes.
+        //      Perhaps it can be exposed as in a nested interface (Generic?)
         //public static TypedReference<T> ToTypedReference<T>(this T value)
         //{
         //    if (value is ObjectReference objectReference)
@@ -424,7 +453,8 @@ namespace System.Runtime.ConversionServices
         //    return (TypedReference<T>)new ObjectReference(value).TypedReference;
         //}
 
-        //TODO: Move to Arithmetic Extensions
+        //TODO: 1) Move to Arithmetic Extensions. 
+         //     2) Rename to Arithmetic, or perhaps Numeric or AsNumeric? Need define conventions.
         //public static IGenericArithmetic ToArithmetic(this IRuntimeTypedReference value)
         //{
         //    return value.Generic.Arithmetic;
@@ -440,6 +470,21 @@ namespace System.Runtime.ConversionServices
                 return objectReference.TypedReference;
             return new ObjectReference(value).TypedReference;
         }
+
+        public static IRuntimeTypedReference ToTypedReference(this object value, Type objectType)
+        {
+            var type = value?.GetType() ?? objectType;
+            if (value is ObjectReference objectReference)
+                return objectReference.TypedReference;
+            return new ObjectReference(value).TypedReference;
+        }
+
+        //TODO: Spike! Solidify public Cast/Convert/DirectCast/To/Unbox/ChangeType Apis.
+        //      Need to balance functionality requirements vs filling developer's intellisense with noise.
+        //      It might be a few extra keystrokes to access API's via a nested property but 
+        //          usability will also be hindered by filling auto-complete options with too options.
+        //      1) Define a minimal set of required extensions.
+        //      2) Profile performance costs for moving methods into nested properties/interfaces. 
         public static T
             Cast<T>(this ObjectReference objectReference) => objectReference.TypedReference.Cast<T>();
         public static T

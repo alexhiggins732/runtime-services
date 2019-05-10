@@ -14,14 +14,27 @@ namespace System.Runtime.ConversionServices
     public interface IGenericStruct
     {
         IGenericArithmetic Arithmetic { get; }
-        IRuntimeTypedReference TypedReference { get; }
+        IRuntimeTypedReference IRuntimeTypedReference { get; }
+        IGenericRuntimeTypeDefinition IGenericRuntimeTypeDefinition { get; }
         TOut To<TOut>();
+        IRuntimeTypedReference GetField(IInstanceFieldDefinition instanceFieldDefinition);
+        IRuntimeTypedReference GetField<TOut>(IInstanceFieldDefinition instanceFieldDefinition);
     }
     public struct Generic<T> : IGenericStruct
     {
         public T Value;
         public IGenericArithmetic Arithmetic => new Arithmetic<T> { Value = Value };
-        public IRuntimeTypedReference TypedReference => new RuntimeTypedReference<T> { Value = Value };
+
+        public RuntimeTypedReference<T> RuntimeTypedReference => new RuntimeTypedReference<T> { Value = Value };
+        public IRuntimeTypedReference IRuntimeTypedReference => RuntimeTypedReference;
+
+        public GenericRuntimeTypeDefinition<T> GenericRuntimeTypeDefinition => new GenericRuntimeTypeDefinition<T>();
+        public IGenericRuntimeTypeDefinition IGenericRuntimeTypeDefinition => GenericRuntimeTypeDefinition;
+
+        public IRuntimeTypedReference GetField(IInstanceFieldDefinition instanceFieldDefinition)
+           => instanceFieldDefinition.FieldInfo.GetValue(Value).ToTypedReference(instanceFieldDefinition.FieldInfo.FieldType);
+        public IRuntimeTypedReference GetField<TOut>(IInstanceFieldDefinition instanceFieldDefinition)
+        => ((TOut)instanceFieldDefinition.FieldInfo.GetValue(Value)).ToTypedReference();
 
         public TOut To<TOut>() => Value.To<TOut>();
     }

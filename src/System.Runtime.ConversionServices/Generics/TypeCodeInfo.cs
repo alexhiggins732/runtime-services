@@ -15,7 +15,7 @@ namespace System.Runtime.ConversionServices
 
         object ITypeCodeInfo.Default => Default;
 
-        public static Func<T, TOther, IRuntimeReference> AdditionOperator<TOther>()
+        public static Func<T, TOther, IRuntimeTypedReference> AdditionOperator<TOther>()
         {
             return GenericAdd<T, TOther>.FnAdd;
         }

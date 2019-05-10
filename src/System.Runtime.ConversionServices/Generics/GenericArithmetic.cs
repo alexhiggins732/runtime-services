@@ -10,7 +10,7 @@ namespace System.Runtime.ConversionServices
         {
 
             GenericAdder<int, int, int>.FnAdd = (a, b) => a + b;
-            GenericAdd<int, int>.FnAdd = (a, b) => new RuntimeReference<int> { Value = a + b };
+            GenericAdd<int, int>.FnAdd = (a, b) => new RuntimeTypedReference<int> { Value = a + b };
 
 
             var result = GenericAdder<int, int, int>.Add(1, 2);
@@ -57,22 +57,22 @@ namespace System.Runtime.ConversionServices
 
         }
     }
-    public interface IRuntimeReference { }
+    //public interface IRuntimeReference { }
     public interface IGenericAdder
     {
-        IRuntimeReference Add(IRuntimeReference a, IRuntimeReference b);
+        IRuntimeTypedReference Add(IRuntimeTypedReference a, IRuntimeTypedReference b);
     }
-    public struct RuntimeReference<T> : IRuntimeReference
-    {
-        public T Value;
-        public static implicit operator RuntimeReference<T>(T value) => new RuntimeReference<T> { Value = value };
-    }
+    //public struct RuntimeReference<T> : IRuntimeReference
+    //{
+    //    public T Value;
+    //    public static implicit operator RuntimeReference<T>(T value) => new RuntimeReference<T> { Value = value };
+    //}
 
 
     //TODO: Unify GenericAdder, GenericAdder, GenericAdd
     public struct GenericAdder
     {
-        public static IRuntimeReference Add(object a, object b)
+        public static IRuntimeTypedReference Add(object a, object b)
         {
             var tca = TypeCodeInfoFactory.GetTypeCodeInfo(a.GetType());
             var tcb = TypeCodeInfoFactory.GetTypeCodeInfo(b.GetType());
@@ -88,15 +88,22 @@ namespace System.Runtime.ConversionServices
         public static Func<T1, T2, TResult> FnAdd = null;
 
         //Support for runtime boxed objects
-        public static IRuntimeReference Add(IRuntimeReference a, IRuntimeReference b)
+        public static IRuntimeTypedReference Add(IRuntimeTypedReference a, IRuntimeTypedReference b)
         {
-            var refa = (RuntimeReference<T1>)(object)a;
-            var refb = (RuntimeReference<T2>)(object)b;
-            return (IRuntimeReference)Add(refa, refb);
+            var refa = (RuntimeTypedReference<T1>)(object)a;
+            var refb = (RuntimeTypedReference<T2>)(object)b;
+            return (IRuntimeTypedReference)Add(refa, refb);
+        }
+
+        public static TResult Add(T1 a, T2 b)
+        {
+            var refa = (RuntimeTypedReference<T1>)(object)a;
+            var refb = (RuntimeTypedReference<T2>)(object)b;
+            return Add(refa, refb).To<TResult>();
         }
 
         //Support for statically compiled linkage
-        public static TResult Add(RuntimeReference<T1> a, RuntimeReference<T2> b)
+        public static TResult Add(RuntimeTypedReference<T1> a, RuntimeTypedReference<T2> b)
         {
             if (FnAdd != null)
                 return FnAdd(a.Value, b.Value);
@@ -104,21 +111,21 @@ namespace System.Runtime.ConversionServices
         }
 
         //not sure if this is needed.
-        public static RuntimeReference<TResult>
-            AddRef(RuntimeReference<T1> a, RuntimeReference<T2> b)
+        public static RuntimeTypedReference<TResult>
+            AddRef(RuntimeTypedReference<T1> a, RuntimeTypedReference<T2> b)
         {
             //return default(RuntimeReference<TResult>);
             if (FnAdd != null)
-                return new RuntimeReference<TResult> { Value = FnAdd(a.Value, b.Value) };
-            return default(RuntimeReference<TResult>);
+                return new RuntimeTypedReference<TResult> { Value = FnAdd(a.Value, b.Value) };
+            return default(RuntimeTypedReference<TResult>);
         }
     }
 
     public struct GenericAdd<T1, T2> : IBinaryOperator
     {
-        public static Func<T1, T2, IRuntimeReference> FnAdd = null;
+        public static Func<T1, T2, IRuntimeTypedReference> FnAdd = null;
 
-        public IRuntimeReference OpAdd<TIn1, TIn2>(TIn1 a, TIn2 b)
+        public IRuntimeTypedReference OpAdd<TIn1, TIn2>(TIn1 a, TIn2 b)
             => FnAdd((T1)(object)a, (T2)(object)b);
 
         public static Func<T1, T2, IRuntimeTypedReference> Op_Add = null;
@@ -129,7 +136,7 @@ namespace System.Runtime.ConversionServices
 
     public interface IBinaryOperator
     {
-        IRuntimeReference OpAdd<T1, T2>(T1 a, T2 b);
+        IRuntimeTypedReference OpAdd<T1, T2>(T1 a, T2 b);
     }
 
     public interface ITypeCodeInfo
