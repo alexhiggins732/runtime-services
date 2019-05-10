@@ -12,7 +12,7 @@ namespace System.Runtime.ConversionServices
             var underylingType = Nullable.GetUnderlyingType(typeof(T));
             return underylingType != null;
         }
-        public static T UnderlyingDefault<T>() => 
+        public static T UnderlyingDefault<T>() =>
             (T)((object)null).To(Nullable.GetUnderlyingType(typeof(T)));
 
         /// <summary>
@@ -103,13 +103,61 @@ namespace System.Runtime.ConversionServices
         /// <param name="value"></param>
         /// <returns></returns>
         public static Converter<T> Convert<T>(this T value)
-            { return new Converter<T> { Value = value }; }
+        { return new Converter<T> { Value = value }; }
 
-        public static IRuntimeConvert Compare<T>(this T value)
-            { return new Converter<T> { Value = value }; }
+        public static IRuntimeConvert Comparer<T>(this T value)
+        { return new Converter<T> { Value = value }; }
+
+        public static int Compare(this IRuntimeTypedReference value, object other)
+        //TODO: Implement IComparer interface
+        // => ((IRuntimeComparer)Value).Compare(other);
+        //=> RuntimeTypedReferenceCall(value, other, (a, b) => a.Compare(b));
+        //Boxed 
+        //=> value.BoxedValue.Comparer().Compare(other);
+        {
+            //TODO use generics.
+            if (other is IRuntimeTypedReference otherRef)
+            {
+                return value.Comparer.Compare(otherRef.Comparer);
+                //return value.BoxedValue.Comparer().Compare(otherRef.BoxedValue);
+            }
+            return value.Comparer.Compare(other);
+        }
+
+        //NOT needed
+        static Func<RuntimeTypedReference<T>, Tin, TResult>
+            RuntimeTypedReferenceCompare<T, Tin, TResult>
+            (RuntimeTypedReference<T> instance, Tin other) => (a, b) => instance.Value.Compare(other).To<TResult>();
+
+        static
+        //Func
+        //    <
+        //        IRuntimeTypedReference, //arg 0
+        //        TIn,  //arg 1
+        //        Func<IRuntimeTypedReference, TIn, TResult> // (return (TResult)fn(a,b);
+        //        TResult
+        //    > 
+        TResult
+            RuntimeTypedReferenceCall<TIn, TResult>(
+                IRuntimeTypedReference instance,
+                TIn other,
+                Func<IRuntimeTypedReference, TIn, TResult> callback
+                )
+        {
+            return instance.RuntimeCall<TIn, TResult>(instance, other, callback);
+        }
+
+        //callback(instance, other).To<TResult>();
+
+        //instance.call<TIn,TResult>(callback);
+
+
+
+        //public static int Compare<T>(this RuntimeTypedReference<T> value, object other)
+        //{ return value.Compare().Compare(other); }
 
         public static int Compare<T>(this T value, object other)
-            { return value.Compare().Compare(other); }
+        { return value.Comparer().Compare(other); }
 
         public static IRuntimeConvert Unbox<T>(this T value)
         {
@@ -139,8 +187,11 @@ namespace System.Runtime.ConversionServices
         /// <param name="value"></param>
         /// <param name="type"></param>
         /// <returns></returns>
-        public static object To<TIn>(this TIn value, Type type) => value.Convert().To(type);
-
+        public static object To<TIn>(this TIn value, Type type)
+        {
+            if (value is IRuntimeTypedReference rt) return rt.Cast(type);
+            return value.Convert().To(type);
+        }
         /// <summary>
         /// Converts the <typeparamref name="TIn"/> <paramref name="value"/> to the target <typeparamref name="TOut"/> <see cref="Type"/>
         /// </summary>

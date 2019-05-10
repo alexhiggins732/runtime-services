@@ -79,7 +79,7 @@ namespace System.Runtime.ConversionServices.Tests
             {
                 var current = array[i];
                 var next = array[i + 1];
-                bool result = current.Compare().LessThan(next);
+                bool result = current.Comparer().LessThan(next);
                 Assert.True(result);
             }
 
@@ -94,11 +94,11 @@ namespace System.Runtime.ConversionServices.Tests
             {
                 var current = array[i];
                 var next = array[i];
-                bool resultGreaterThan = current.Compare().LessThanOrEqual(next);
+                bool resultGreaterThan = current.Comparer().LessThanOrEqual(next);
                 Assert.True(resultGreaterThan);
-                bool resultGreaterThanOrEqualCurrent = current.Compare().LessThanOrEqual(current);
+                bool resultGreaterThanOrEqualCurrent = current.Comparer().LessThanOrEqual(current);
                 Assert.True(resultGreaterThan);
-                bool resultGreaterThanOrEqualNext = next.Compare().LessThanOrEqual(next);
+                bool resultGreaterThanOrEqualNext = next.Comparer().LessThanOrEqual(next);
                 Assert.True(resultGreaterThan);
             }
         }
@@ -112,8 +112,8 @@ namespace System.Runtime.ConversionServices.Tests
             {
                 var current = array[i];
 
-                bool result = ((object)current).Compare().Equals((object)current);
-                int compare = ((object)current).Compare().Compare((object)current);
+                bool result = ((object)current).Comparer().Equals((object)current);
+                int compare = ((object)current).Comparer().Compare((object)current);
                 Assert.True(result);
                 Assert.True(compare == 0);
 
@@ -129,7 +129,7 @@ namespace System.Runtime.ConversionServices.Tests
             {
                 var current = array[i];
                 var next = array[i - 1];
-                bool result = current.Compare().GreaterThan(next);
+                bool result = current.Comparer().GreaterThan(next);
                 Assert.True(result);
             }
         }
@@ -143,11 +143,11 @@ namespace System.Runtime.ConversionServices.Tests
             {
                 var current = array[i];
                 var next = array[i - 1];
-                bool resultGreaterThan = current.Compare().GreaterThanOrEqual(next);
+                bool resultGreaterThan = current.Comparer().GreaterThanOrEqual(next);
                 Assert.True(resultGreaterThan);
-                bool resultGreaterThanOrEqualCurrent = current.Compare().GreaterThanOrEqual(current);
+                bool resultGreaterThanOrEqualCurrent = current.Comparer().GreaterThanOrEqual(current);
                 Assert.True(resultGreaterThan);
-                bool resultGreaterThanOrEqualNext = next.Compare().GreaterThanOrEqual(next);
+                bool resultGreaterThanOrEqualNext = next.Comparer().GreaterThanOrEqual(next);
                 Assert.True(resultGreaterThan);
             }
         }

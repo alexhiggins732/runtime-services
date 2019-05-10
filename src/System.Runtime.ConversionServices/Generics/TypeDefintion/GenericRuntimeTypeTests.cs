@@ -66,6 +66,9 @@ namespace System.Runtime.ConversionServices
             //newFromType.Call(nameof(TestClass.SomeIntMethod), new[] { 1, "s" });
         }
 
+        //WIP: Can call constructors, manipulate fields.
+        //  TODO: Sorten public fluent public api. Unit test, check fields with arrays
+        //  TODO: decide on seperate APIS for Member/Property/Field or expose all through single Members[] accessor.
         public static void TestGenericTypeDefinition()
         {
 
@@ -91,14 +94,34 @@ namespace System.Runtime.ConversionServices
                .Generic
                .IGenericRuntimeTypeDefinition
                .IGenericRuntimeTypeInfo
-               .InstanceFields.First().Set(infNew, 1.ToTypedReference());
+               .InstanceFields.First().Set(infNew, 1);
+
+            //TODO: Handle typed reference being passed as pararameter
+
+            infNew
+            .Generic
+            .IGenericRuntimeTypeDefinition
+            .IGenericRuntimeTypeInfo
+            .InstanceFields.First().Set(infNew, 2.ToTypedReference());
 
             var firstField =
                 fields
                 .First();
+
             var firstFieldvalue
                 = firstField
                 .Get(infNew);//TODO: should the instance be passed to Fields/Methods/Properties constructors?
+
+            var ea = firstFieldvalue.Compare(1) == 0;
+
+            //TODO: handle typed referece
+            var eaTypedCompare1 = firstFieldvalue.Compare(1.ToTypedReference()) == 0;
+            var eaTypedCompare1Int = firstFieldvalue.Compare(1) == 0;
+            var eaTypedCompare2 = firstFieldvalue.Compare(2.ToTypedReference()) == 0;
+            var egGenericCompare1 = firstFieldvalue.To<int>() == 2;
+            var egGenericCompare2 = firstFieldvalue.To<int>() == 2;
+
+
             firstField.Set(infNew, 1);//Need to fix this.
 
             int a = ~1;

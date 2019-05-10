@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using static System.Runtime.ConversionServices.Conversions;
 
 namespace System.Runtime.ConversionServices.Generics.TypeDefintion
 {
@@ -11,11 +12,15 @@ namespace System.Runtime.ConversionServices.Generics.TypeDefintion
         {
             public Func<T> fn;
             public Fn(Func<T> fn) => this.fn = fn;
+   
         }
         public class Fn0<T> : IFn0
         {
             public IFn F0 { get; }
+
+
             public Fn0(Func<T> fn) => this.F0 = new Fn<T>(fn);
+
         }
         public class Fn1<T0, T1> : Fn0<T0>, IFn1
         {
@@ -115,7 +120,9 @@ namespace System.Runtime.ConversionServices.Generics.TypeDefintion
 
         }
 
-        public IFn0 GetIfn<T0>(Func<T0> fn0) => new Fn0<T0>(fn0);
+        public static IFn0 GetIfn<T0>(Func<T0> fn0) => new Fn0<T0>(fn0);
+        public static IFn0 GetIfn<T0>(Func<Func<T0>> fn0) => new Fn0<T0>(fn0());
+
         public IFn1 GetIfn<T0, T1>(Func<T0> fn0, Func<T1> fn1) => new Fn1<T0, T1>(fn0, fn1);
         public IFn2 GetIfn<T0, T1, T2>(Func<T0> fn0, Func<T1> fn1, Func<T2> fn2) => new Fn2<T0, T1, T2>(fn0, fn1, fn2);
 

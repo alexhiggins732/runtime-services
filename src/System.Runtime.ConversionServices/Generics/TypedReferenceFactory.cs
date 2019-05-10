@@ -289,13 +289,19 @@ namespace System.Runtime.ConversionServices
     public interface IRuntimeTypedReference : IGeneric
     {
         T Cast<T>();
+        object Cast(Type outType);
         T DirectCast<T>();
+
+        object DirectCast(Type outType);
         object BoxedValue { get; }
         Type GenericArgumentType { get; }
 
         IRuntimeTypedReference Clone(); //interface to create new instances of TypedReference<T> without using reflection
         IRuntimeTypedReference SetValue(object objectReference); // interface to unbox object references
+        TResult RuntimeCall<TIn, TResult>(IRuntimeTypedReference instance, TIn Other, Func<IRuntimeTypedReference, TIn, TResult> callback);
 
+
+        IRuntimeConvert Comparer { get; }
         //can we turn this into a generic pattern.
         //IRuntimeTypedReference Add(IRuntimeTypedReference other);
         //IRuntimeTypedReference Add<TOther>(RuntimeTypedReference<TOther> other);
@@ -345,9 +351,16 @@ namespace System.Runtime.ConversionServices
         public object BoxedValue => Value;
 
 
-
+        public Converter<T> Converter =>  new Converter<T> { Value = Value };
+        public IRuntimeConvert Comparer => Converter;
         public RuntimeTypedReference(T value) => this.Value = value;
         public TOut Cast<TOut>() => TypedReferenceConverter<T, TOut>.Convert(Value);
+        public object Cast(Type outType) => (GenericType == outType) ? Value : Value.To(outType);
+
+
+        public object DirectCast(Type outType) => (GenericType == outType) ? Value : throw new InvalidOperationException($"Cannot DirecCast {GenericType.Name} t {outType.Name}");
+
+
         public TOut DirectCast<TOut>() => (TOut)(object)Value;
         public IRuntimeTypedReference Clone()
         {
@@ -363,6 +376,20 @@ namespace System.Runtime.ConversionServices
             other.Value = (T)objectReference;
             return (IRuntimeTypedReference)other;
         }
+
+        public TResult RuntimeCall<TIn, TResult>(IRuntimeTypedReference instance, TIn Other, Func<IRuntimeTypedReference, TIn, TResult> callback)
+        {
+            return RuntimeCall((RuntimeTypedReference<T>)instance, Other, callback);
+
+
+        }
+        public TResult RuntimeCall<TIn, TResult>(RuntimeTypedReference<T> instance, 
+            TIn Other, Func<IRuntimeTypedReference, TIn, TResult> callback)
+        {
+            return callback(instance, Other).To<TResult>();
+        }
+
+
 
         //public IRuntimeTypedReference BinaryCall(IRuntimeTypedReference other, OperatorType operatorType)
         //{
@@ -431,7 +458,7 @@ namespace System.Runtime.ConversionServices
 
         public static IRuntimeTypedReference FromType(this Type value)
             => TypedReferenceFactory.GetTypedReference(value);
-   
+
 
         public static IRuntimeTypedReference ToTypedReference<T>(this T value)
         {
@@ -454,7 +481,7 @@ namespace System.Runtime.ConversionServices
         //}
 
         //TODO: 1) Move to Arithmetic Extensions. 
-         //     2) Rename to Arithmetic, or perhaps Numeric or AsNumeric? Need define conventions.
+        //     2) Rename to Arithmetic, or perhaps Numeric or AsNumeric? Need define conventions.
         //public static IGenericArithmetic ToArithmetic(this IRuntimeTypedReference value)
         //{
         //    return value.Generic.Arithmetic;

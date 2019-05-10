@@ -3,11 +3,18 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.ConversionServices.Generics.TypeDefintion;
 
 namespace System.Runtime.ConversionServices
 {
     public static partial class Conversions
     {
+        public static class ConverterResolver
+        {
+
+
+        }
+
         /// <summary>
         /// Statically links <see cref="Converter{TIn}"/> 
         /// to <see cref="RuntimeConverter{TIn, TOut}"/> to provide conversion services.
@@ -183,21 +190,27 @@ namespace System.Runtime.ConversionServices
                 }
             }
 
-            int IRuntimeConvert.Compare(object other)
+            int IRuntimeConvert.Compare(object other) => Compare(other.Convert());
+
+            public int Compare(IRuntimeTypedReference other) => Compare(other.Comparer);
+            public int Compare(IRuntimeConvert value)
             {
-                var otherValue = other.Convert().To<TIn>();
+                return Compare(value.To<TIn>());
+            }
+            public int Compare(TIn other)
+            {
                 if (Value is IComparable)
                 {
-                    return ((IComparable)Value).CompareTo(otherValue);
+                    return ((IComparable)Value).CompareTo(other);
                 }
                 else if (Value is IComparable<TIn>)
                 {
-                    return ((IComparable<TIn>)Value).CompareTo(otherValue);
+                    return ((IComparable<TIn>)Value).CompareTo(other);
                 }
                 else // fall back to dynamic runtime comparison
                 {
-                    if (((dynamic)Value) == ((dynamic)otherValue)) return 0;
-                    if (((dynamic)Value) < ((dynamic)otherValue)) return -1;
+                    if (((dynamic)Value) == ((dynamic)other)) return 0;
+                    if (((dynamic)Value) < ((dynamic)other)) return -1;
                     return 1;
                 }
             }
@@ -248,7 +261,7 @@ namespace System.Runtime.ConversionServices
                 }
                 else // fall back to object comparison
                 {
-                    return ((dynamic)Value) > ((dynamic)otherValue); 
+                    return ((dynamic)Value) > ((dynamic)otherValue);
                 }
             }
             bool IRuntimeConvert.GreaterThanOrEqual(object other)
@@ -274,6 +287,9 @@ namespace System.Runtime.ConversionServices
             {
                 return new TInComparer();
             }
+
+
+
             //TODO
             private class TInComparer : Comparer<TIn>
             {

@@ -33,7 +33,8 @@
             bool GreaterThan(object value);
             bool GreaterThanOrEqual(object value);
             int Compare(object value);
-          
+            int Compare(IRuntimeConvert value);
+
         }
 
 
