@@ -19,7 +19,7 @@ namespace System.Runtime.ConversionServices
         public List<StaticFieldDefinition<T>> StaticFields { get; private set; }
         List<IInstanceFieldDefinition> IGenericRuntimeTypeInfo.InstanceFields => InstanceFields.Cast<IInstanceFieldDefinition>().ToList();
         List<IStaticFieldDefinition> IGenericRuntimeTypeInfo.StaticFields => StaticFields.Cast<IStaticFieldDefinition>().ToList();
-        private void loadFields()
+        private void LoadFields()
         {
 
             InstanceFields = new List<InstanceFieldDefinition<T>>();

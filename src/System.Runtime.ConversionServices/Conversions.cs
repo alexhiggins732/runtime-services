@@ -159,6 +159,10 @@ namespace System.Runtime.ConversionServices
         public static int Compare<T>(this T value, object other)
         { return value.Comparer().Compare(other); }
 
+        public static int Compare(this string value, object other, bool ignoreCase = false)
+        { return string.Compare(value, (other ?? "").ToString(), ignoreCase); }
+
+
         public static IRuntimeConvert Unbox<T>(this T value)
         {
             var converter = Convert(value);

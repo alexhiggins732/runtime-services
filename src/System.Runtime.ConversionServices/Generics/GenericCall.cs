@@ -56,8 +56,8 @@ namespace System.Runtime.ConversionServices
         public static GenericFactory<T1> Instance = new GenericFactory<T1>();
         IGenericFactory IGenericFactory.GenericFactory => Instance;
 
-        public IGenericNullaryCall GenericDefault => new GenericNullaryCall<T1> { Func = () => default(T1) };
-        public T1 DefaultT => default(T1);
+        public IGenericNullaryCall GenericDefault => new GenericNullaryCall<T1> { Func = () => default };
+        public T1 DefaultT => default;
 
         public IGenericCallResult Call(IGenericNullaryCall unaryCall)
         {

@@ -57,7 +57,9 @@
     <Compile Include="InterfaceGenerator.cs" />
     <Compile Include="LinqExpressionStructBuilder.cs" />
     <Compile Include="MsilIConverteribleTests.cs" />
+    <Compile Include="MsilTestEngine.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="ProjectSync.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SignatureBuilder.cs" />
     <Compile Include="SignatureTests.cs" />
@@ -70,6 +72,10 @@
     <ProjectReference Include="..\..\src\System.Runtime.ConversionServices\System.Runtime.ConversionServices.csproj">
       <Project>{f334b252-a73d-4fdb-897e-1209a556b4cc}</Project>
       <Name>System.Runtime.ConversionServices</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\System.Runtime.RuntimeServices\System.Runtime.RuntimeServices.csproj">
+      <Project>{9cc526e1-9ae1-43db-b207-55be68dcc268}</Project>
+      <Name>System.Runtime.RuntimeServices</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -17,12 +17,12 @@ namespace System.Runtime.ConversionServices
 
         public static Func<T, TOther, IRuntimeTypedReference> AdditionOperator<TOther>()
         {
-            return GenericAdd<T, TOther>.FnAdd;
+            return GenericBinaryOp<T, TOther>.FnAdd;
         }
 
         public IBinaryOperator OpAdd<TOther>()
         {
-            return new GenericAdd<T, TOther>();
+            return new GenericBinaryOp<T, TOther>();
         }
 
     }

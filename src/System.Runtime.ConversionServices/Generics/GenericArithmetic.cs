@@ -10,7 +10,7 @@ namespace System.Runtime.ConversionServices
         {
 
             GenericAdder<int, int, int>.FnAdd = (a, b) => a + b;
-            GenericAdd<int, int>.FnAdd = (a, b) => new RuntimeTypedReference<int> { Value = a + b };
+            GenericBinaryOp<int, int>.FnAdd = (a, b) => new RuntimeTypedReference<int> { Value = a + b };
 
 
             var result = GenericAdder<int, int, int>.Add(1, 2);
@@ -107,7 +107,7 @@ namespace System.Runtime.ConversionServices
         {
             if (FnAdd != null)
                 return FnAdd(a.Value, b.Value);
-            return default(TResult);
+            return default;// (TResult);
         }
 
         //not sure if this is needed.
@@ -117,11 +117,11 @@ namespace System.Runtime.ConversionServices
             //return default(RuntimeReference<TResult>);
             if (FnAdd != null)
                 return new RuntimeTypedReference<TResult> { Value = FnAdd(a.Value, b.Value) };
-            return default(RuntimeTypedReference<TResult>);
+            return default; // (RuntimeTypedReference<TResult>);
         }
     }
 
-    public struct GenericAdd<T1, T2> : IBinaryOperator
+    public struct GenericBinaryOp<T1, T2> : IBinaryOperator
     {
         public static Func<T1, T2, IRuntimeTypedReference> FnAdd = null;
 
@@ -130,6 +130,13 @@ namespace System.Runtime.ConversionServices
 
         public static Func<T1, T2, IRuntimeTypedReference> Op_Add = null;
 
+        public static Func<T1, T2, IRuntimeTypedReference> FnSubtract = null;
+
+        public IRuntimeTypedReference OpSubtract<TIn1, TIn2>(TIn1 a, TIn2 b)
+            => FnSubtract((T1)(object)a, (T2)(object)b);
+
+        public static Func<T1, T2, IRuntimeTypedReference> Op_Subtract = null;
+
     }
 
 
@@ -137,7 +144,9 @@ namespace System.Runtime.ConversionServices
     public interface IBinaryOperator
     {
         IRuntimeTypedReference OpAdd<T1, T2>(T1 a, T2 b);
+        IRuntimeTypedReference OpSubtract<T1, T2>(T1 a, T2 b);
     }
+
 
     public interface ITypeCodeInfo
     {

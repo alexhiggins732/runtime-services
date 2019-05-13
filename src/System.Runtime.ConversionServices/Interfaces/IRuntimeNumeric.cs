@@ -10,7 +10,7 @@ namespace System.Runtime.ConversionServices.Interfaces
         IRuntimeNumeric MinusOne { get; }
         int Sign { get; }
         IRuntimeNumeric Abs(IRuntimeNumeric value);
-        IRuntimeNumeric op_Negate(IRuntimeNumeric value); //only for signed
+        IRuntimeNumeric Op_Negate(IRuntimeNumeric value); //only for signed
     }
     public interface IRuntimeNumericMinMax
     {
@@ -30,6 +30,7 @@ namespace System.Runtime.ConversionServices.Interfaces
 
     public interface IRuntimeNumeric :
         IRuntimeTypedReference, IComparable,
+        IRuntimeComparable, IRuntimeEquatable,
         IComparable<IRuntimeNumeric>, IEquatable<IRuntimeNumeric>,
         //TODO: Implement IComparable<T>, IEquatable<T>, for the Reference <T>
         //TODO: Implement IComparable<IRuntimeTypedReference>, IEquatable<IRuntimeTypedReference>, for the Reference IRuntimeTypedReference
@@ -107,7 +108,7 @@ namespace System.Runtime.ConversionServices.Interfaces
         string ToString(IFormatProvider provider);
         string ToString(string format);
         string ToString();
-        string ToString(string format, IFormatProvider provider);
+        //string ToString(string format, IFormatProvider provider);
 
 
         //Comparable
@@ -116,13 +117,13 @@ namespace System.Runtime.ConversionServices.Interfaces
         //Comparer
         int CompareTo(long other);
         int CompareTo(ulong other);
-        int CompareTo(IRuntimeNumeric other);
+        //int CompareTo(IRuntimeNumeric other);
         int CompareTo(IRuntimeTypedReference other);
-        int CompareTo(object obj);
+        //int CompareTo(object obj);
 
         //Equality
         bool Equals(long other);
-        bool Equals(IRuntimeNumeric other);
+        //bool Equals(IRuntimeNumeric other);
         bool Equals(IRuntimeTypedReference other);
         bool Equals(object obj);
         bool Equals(ulong other);
@@ -155,90 +156,90 @@ namespace System.Runtime.ConversionServices.Interfaces
 
 
         // Operators
-        IRuntimeNumeric op_UnaryPlus(IRuntimeNumeric value);
-        IRuntimeNumeric op_Addition(IRuntimeNumeric left, IRuntimeNumeric right);
-        IRuntimeNumeric op_Subtract(IRuntimeNumeric left, IRuntimeNumeric right);
+        IRuntimeNumeric Op_UnaryPlus(IRuntimeNumeric value);
+        IRuntimeNumeric Op_Addition(IRuntimeNumeric left, IRuntimeNumeric right);
+        IRuntimeNumeric Op_Subtract(IRuntimeNumeric left, IRuntimeNumeric right);
         /// <summary>
         /// Bitwise complement operator ~ (negate)
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        IRuntimeNumeric op_OnesComplement(IRuntimeNumeric value);
-        IRuntimeNumeric op_Increment(IRuntimeNumeric value);
-        IRuntimeNumeric op_Decrement(IRuntimeNumeric value);
-        IRuntimeNumeric op_Multiply(IRuntimeNumeric left, IRuntimeNumeric right);
-        IRuntimeNumeric op_Divide(IRuntimeNumeric dividend, IRuntimeNumeric divisor);
-        IRuntimeNumeric op_Rem(IRuntimeNumeric dividend, IRuntimeNumeric divisor);
-        IRuntimeNumeric op_And(IRuntimeNumeric left, IRuntimeNumeric right);
-        IRuntimeNumeric op_Or(IRuntimeNumeric left, IRuntimeNumeric right);
-        IRuntimeNumeric op_Xor(IRuntimeNumeric left, IRuntimeNumeric right);
-        IRuntimeNumeric op_LeftShift(IRuntimeNumeric value, int shift);
-        IRuntimeNumeric op_RightShift(IRuntimeNumeric value, int shift);
+        IRuntimeNumeric Op_OnesComplement(IRuntimeNumeric value);
+        IRuntimeNumeric Op_Increment(IRuntimeNumeric value);
+        IRuntimeNumeric Op_Decrement(IRuntimeNumeric value);
+        IRuntimeNumeric Op_Multiply(IRuntimeNumeric left, IRuntimeNumeric right);
+        IRuntimeNumeric Op_Divide(IRuntimeNumeric dividend, IRuntimeNumeric divisor);
+        IRuntimeNumeric Op_Rem(IRuntimeNumeric dividend, IRuntimeNumeric divisor);
+        IRuntimeNumeric Op_And(IRuntimeNumeric left, IRuntimeNumeric right);
+        IRuntimeNumeric Op_Or(IRuntimeNumeric left, IRuntimeNumeric right);
+        IRuntimeNumeric Op_Xor(IRuntimeNumeric left, IRuntimeNumeric right);
+        IRuntimeNumeric Op_LeftShift(IRuntimeNumeric value, int shift);
+        IRuntimeNumeric Op_RightShift(IRuntimeNumeric value, int shift);
 
 
-        bool op_Equals(ulong left, IRuntimeNumeric right);
-        bool op_Equals(long left, IRuntimeNumeric right);
-        bool op_Equals(IRuntimeNumeric left, long right);
-        bool op_Equals(IRuntimeNumeric left, IRuntimeNumeric right);
-        bool op_Equals(IRuntimeNumeric left, ulong right);
-        bool op_NotEqual(long left, IRuntimeNumeric right);
-        bool op_NotEqual(IRuntimeNumeric left, long right);
-        bool op_NotEqual(IRuntimeNumeric left, IRuntimeNumeric right);
-        bool op_NotEqual(IRuntimeNumeric left, ulong right);
-        bool op_NotEqual(ulong left, IRuntimeNumeric right);
-        bool op_LessThan(long left, IRuntimeNumeric right);
-        bool op_LessThan(ulong left, IRuntimeNumeric right);
-        bool op_LessThan(IRuntimeNumeric left, ulong right);
-        bool op_LessThan(IRuntimeNumeric left, IRuntimeNumeric right);
-        bool op_LessThan(IRuntimeNumeric left, long right);
-        bool op_GreaterThan(IRuntimeNumeric left, ulong right);
-        bool op_GreaterThan(IRuntimeNumeric left, IRuntimeNumeric right);
-        bool op_GreaterThan(long left, IRuntimeNumeric right);
-        bool op_GreaterThan(IRuntimeNumeric left, long right);
-        bool op_GreaterThan(ulong left, IRuntimeNumeric right);
+        bool Op_Equals(ulong left, IRuntimeNumeric right);
+        bool Op_Equals(long left, IRuntimeNumeric right);
+        bool Op_Equals(IRuntimeNumeric left, long right);
+        bool Op_Equals(IRuntimeNumeric left, IRuntimeNumeric right);
+        bool Op_Equals(IRuntimeNumeric left, ulong right);
+        bool Op_NotEqual(long left, IRuntimeNumeric right);
+        bool Op_NotEqual(IRuntimeNumeric left, long right);
+        bool Op_NotEqual(IRuntimeNumeric left, IRuntimeNumeric right);
+        bool Op_NotEqual(IRuntimeNumeric left, ulong right);
+        bool Op_NotEqual(ulong left, IRuntimeNumeric right);
+        bool Op_LessThan(long left, IRuntimeNumeric right);
+        bool Op_LessThan(ulong left, IRuntimeNumeric right);
+        bool Op_LessThan(IRuntimeNumeric left, ulong right);
+        bool Op_LessThan(IRuntimeNumeric left, IRuntimeNumeric right);
+        bool Op_LessThan(IRuntimeNumeric left, long right);
+        bool Op_GreaterThan(IRuntimeNumeric left, ulong right);
+        bool Op_GreaterThan(IRuntimeNumeric left, IRuntimeNumeric right);
+        bool Op_GreaterThan(long left, IRuntimeNumeric right);
+        bool Op_GreaterThan(IRuntimeNumeric left, long right);
+        bool Op_GreaterThan(ulong left, IRuntimeNumeric right);
         /// <summary>
         /// The &lt;= operator returns true if its first operand is less than or equal to its second operand, false otherwise:
         /// </summary>
         /// <param name="left"></param>
         /// <param name="right"></param>
         /// <returns></returns>
-        bool op_LessThanOrEqual(long left, IRuntimeNumeric right);
-        bool op_LessThanOrEqual(IRuntimeNumeric left, long right);
-        bool op_LessThanOrEqual(IRuntimeNumeric left, IRuntimeNumeric right);
-        bool op_LessThanOrEqual(IRuntimeNumeric left, ulong right);
-        bool op_LessThanOrEqual(ulong left, IRuntimeNumeric right);
-        bool op_GreaterThanOrEqual(long left, IRuntimeNumeric right);
-        bool op_GreaterThanOrEqual(IRuntimeNumeric left, long right);
-        bool op_GreaterThanOrEqual(IRuntimeNumeric left, IRuntimeNumeric right);
-        bool op_GreaterThanOrEqual(ulong left, IRuntimeNumeric right);
-        bool op_GreaterThanOrEqual(IRuntimeNumeric left, ulong right);
+        bool Op_LessThanOrEqual(long left, IRuntimeNumeric right);
+        bool Op_LessThanOrEqual(IRuntimeNumeric left, long right);
+        bool Op_LessThanOrEqual(IRuntimeNumeric left, IRuntimeNumeric right);
+        bool Op_LessThanOrEqual(IRuntimeNumeric left, ulong right);
+        bool Op_LessThanOrEqual(ulong left, IRuntimeNumeric right);
+        bool Op_GreaterThanOrEqual(long left, IRuntimeNumeric right);
+        bool Op_GreaterThanOrEqual(IRuntimeNumeric left, long right);
+        bool Op_GreaterThanOrEqual(IRuntimeNumeric left, IRuntimeNumeric right);
+        bool Op_GreaterThanOrEqual(ulong left, IRuntimeNumeric right);
+        bool Op_GreaterThanOrEqual(IRuntimeNumeric left, ulong right);
 
         //Cast/Convert
         //TODO: implicit vs explicit is different via numeric.
-        IRuntimeNumeric op_Implicit(byte value);
-        IRuntimeNumeric op_Implicit(sbyte value);
-        IRuntimeNumeric op_Implicit(short value);
-        IRuntimeNumeric op_Implicit(ushort value);
-        IRuntimeNumeric op_Implicit(int value);
-        IRuntimeNumeric op_Implicit(uint value);
-        IRuntimeNumeric op_Implicit(long value);
-        IRuntimeNumeric op_Implicit(ulong value);
-        IRuntimeNumeric op_Explicit(decimal value);
-        IRuntimeNumeric op_Explicit(float value);
-        IRuntimeNumeric op_Explicit(double value);
-        IRuntimeNumeric op_Explicit(BigInteger value);
+        IRuntimeNumeric Op_Implicit(byte value);
+        IRuntimeNumeric Op_Implicit(sbyte value);
+        IRuntimeNumeric Op_Implicit(short value);
+        IRuntimeNumeric Op_Implicit(ushort value);
+        IRuntimeNumeric Op_Implicit(int value);
+        IRuntimeNumeric Op_Implicit(uint value);
+        IRuntimeNumeric Op_Implicit(long value);
+        IRuntimeNumeric Op_Implicit(ulong value);
+        IRuntimeNumeric Op_Explicit(decimal value);
+        IRuntimeNumeric Op_Explicit(float value);
+        IRuntimeNumeric Op_Explicit(double value);
+        IRuntimeNumeric Op_Explicit(BigInteger value);
 
-        byte op_ExplicitToByte(IRuntimeNumeric value);
-        decimal op_ExplicitToDecimal(IRuntimeNumeric value);
-        double op_ExplicitToDouble(IRuntimeNumeric value);
-        short op_ExplicitToShort(IRuntimeNumeric value);
-        long op_ExplicitToLong(IRuntimeNumeric value);
-        sbyte op_ExplicitToSByte(IRuntimeNumeric value);
-        ushort op_ExplicitToUShort(IRuntimeNumeric value);
-        uint op_ExplicitToUInt(IRuntimeNumeric value);
-        ulong op_ExplicitToULong(IRuntimeNumeric value);
-        IRuntimeNumeric op_ExplicitFrom(float value);
-        int op_ExplicitToInt(IRuntimeNumeric value);
-        float op_ExplicitToFloat(IRuntimeNumeric value);
+        byte Op_ExplicitToByte(IRuntimeNumeric value);
+        decimal Op_ExplicitToDecimal(IRuntimeNumeric value);
+        double Op_ExplicitToDouble(IRuntimeNumeric value);
+        short Op_ExplicitToShort(IRuntimeNumeric value);
+        long Op_ExplicitToLong(IRuntimeNumeric value);
+        sbyte Op_ExplicitToSByte(IRuntimeNumeric value);
+        ushort Op_ExplicitToUShort(IRuntimeNumeric value);
+        uint Op_ExplicitToUInt(IRuntimeNumeric value);
+        ulong Op_ExplicitToULong(IRuntimeNumeric value);
+        IRuntimeNumeric Op_ExplicitFrom(float value);
+        int Op_ExplicitToInt(IRuntimeNumeric value);
+        float Op_ExplicitToFloat(IRuntimeNumeric value);
     }
 }

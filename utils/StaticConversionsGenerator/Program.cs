@@ -2,6 +2,8 @@
 using System.Text;
 using System.Threading.Tasks;
 using static System.Runtime.ConversionServices.Conversions;
+using System.Runtime.ConversionServices.Generics.TypeDefintion;
+using System.IO;
 
 namespace StaticConversionsGenerator
 {
@@ -9,6 +11,19 @@ namespace StaticConversionsGenerator
     {
         static void Main(string[] args)
         {
+
+            MsilTestEngine.TestMethodInfoIlBytes();
+
+            if (true || args.Length == 1 && args[0].Compare("sync", true) == 0)
+            {
+                var fullPath= Path.GetFullPath(ProjectSync.ProjectRootFolder);
+                var exists = Directory.Exists(fullPath);
+                ProjectSync.SyncToFx();
+                return;
+            }
+
+
+            GenericDelegate.Test();
             GenericRuntimeTypeTests.TestGenericTypeDefinition();
 
             GenericCallFactory.ResolverFactoryTest.Test();
@@ -30,7 +45,7 @@ namespace StaticConversionsGenerator
             var boolMax = true;
             var boolMaxSingle = boolMax.To<float>();
             System.Console.WriteLine(boolMaxSingle);
-           
+
 
             var boolMaxIsLessThanboolMaxSingle = boolMax.Comparer().LessThan(boolMaxSingle);
 
@@ -103,7 +118,7 @@ namespace StaticConversionsGenerator
 
             var anUnboxedByteEqualsanotherUnboxedbyte = anUnboxedByte.Equals(anotherBoxedByte);
 
-         
+
 
         }
     }

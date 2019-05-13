@@ -83,8 +83,8 @@ namespace System.Runtime.ConversionServices
 
         public class Bool : ITypeConstant
         {
-            public const bool Default = default(bool);
-            public const bool Min = default(bool);
+            public const bool Default = default;
+            public const bool Min = default;
             public const bool Max = true;
             public static readonly Type Type = Default.GetType();
             public class Char
@@ -151,7 +151,7 @@ namespace System.Runtime.ConversionServices
 
         public class Char
         {
-            public const char Default = default(char);
+            public const char Default = default;
             public const char Min = char.MinValue;
             public const char Max = char.MaxValue;
             public static readonly Type Type = Default.GetType();
@@ -231,7 +231,7 @@ namespace System.Runtime.ConversionServices
 
         public class SByte
         {
-            public const sbyte Default = default(sbyte);
+            public const sbyte Default = default;
             public const sbyte Min = sbyte.MinValue;
             public const sbyte Max = sbyte.MaxValue;
             public static readonly Type Type = Default.GetType();
@@ -311,7 +311,7 @@ namespace System.Runtime.ConversionServices
 
         public class Byte
         {
-            public const byte Default = default(byte);
+            public const byte Default = default;
             public const byte Min = byte.MinValue;
             public const byte Max = byte.MaxValue;
             public static readonly Type Type = Default.GetType();
@@ -391,7 +391,7 @@ namespace System.Runtime.ConversionServices
 
         public class Short
         {
-            public const short Default = default(short);
+            public const short Default = default;
             public const short Min = short.MinValue;
             public const short Max = short.MaxValue;
             public static readonly Type Type = Default.GetType();
@@ -471,7 +471,7 @@ namespace System.Runtime.ConversionServices
 
         public class UShort
         {
-            public const ushort Default = default(ushort);
+            public const ushort Default = default;
             public const ushort Min = ushort.MinValue;
             public const ushort Max = ushort.MaxValue;
             public static readonly Type Type = Default.GetType();
@@ -551,7 +551,7 @@ namespace System.Runtime.ConversionServices
 
         public class Int
         {
-            public const int Default = default(int);
+            public const int Default = default;// (int);
             public const int Min = int.MinValue;
             public const int Max = int.MaxValue;
             public static readonly Type Type = Default.GetType();
@@ -631,7 +631,7 @@ namespace System.Runtime.ConversionServices
 
         public class UInt
         {
-            public const uint Default = default(uint);
+            public const uint Default = default;
             public const uint Min = uint.MinValue;
             public const uint Max = uint.MaxValue;
             public static readonly Type Type = Default.GetType();
@@ -711,7 +711,7 @@ namespace System.Runtime.ConversionServices
 
         public class Long
         {
-            public const long Default = default(long);
+            public const long Default = default;
             public const long Min = long.MinValue;
             public const long Max = long.MaxValue;
             public static readonly Type Type = Default.GetType();
@@ -791,7 +791,7 @@ namespace System.Runtime.ConversionServices
 
         public class ULong
         {
-            public const ulong Default = default(ulong);
+            public const ulong Default = default;
             public const ulong Min = ulong.MinValue;
             public const ulong Max = ulong.MaxValue;
             public static readonly Type Type = Default.GetType();
@@ -871,7 +871,7 @@ namespace System.Runtime.ConversionServices
 
         public class Float
         {
-            public const float Default = default(float);
+            public const float Default = default;
             public const float Min = float.MinValue;
             public const float Max = float.MaxValue;
             public static readonly Type Type = Default.GetType();
@@ -952,7 +952,7 @@ namespace System.Runtime.ConversionServices
 
         public class Double
         {
-            public const double Default = default(double);
+            public const double Default = default;
             public const double Min = double.MinValue;
             public const double Max = double.MaxValue;
             public static readonly Type Type = Default.GetType();
@@ -1034,7 +1034,7 @@ namespace System.Runtime.ConversionServices
 
         public class Decimal
         {
-            public const decimal Default = default(decimal);
+            public const decimal Default = default;
             public const decimal Min = decimal.MinValue;
             public const decimal Max = decimal.MaxValue;
             public static readonly Type Type = Default.GetType();
@@ -1132,7 +1132,7 @@ namespace System.Runtime.ConversionServices
 
         public class BigInt
         {
-            public static readonly BigInteger Default = default(BigInteger);
+            public static readonly BigInteger Default = default;
             //public static readonly BigInteger Min = BigInteger.;
             //public static readonly BigInteger Max = BigInteger.MaxValue;
             public static readonly Type Type = Default.GetType();

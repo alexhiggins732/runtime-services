@@ -15,9 +15,9 @@ namespace StaticConversionsGenerator
             SubtractUnchecked
         }
 
-        public static T1 OpKeySignatureStub<OpKey, T1>(OpKey a) => default(T1);
+        public static T1 OpKeySignatureStub<OpKey, T1>(OpKey a) => default;
 
-        public static T2 OpKeySignatureStub<OpKey, T1, T2>(OpKey a, T1 b) => default(T2);
+        public static T2 OpKeySignatureStub<OpKey, T1, T2>(OpKey a, T1 b) => default;
 
         public static Func<OpKey, T1> OpKeySignature<OpKey, T1>(OpKey a, T1 b)
        => ((d) => OpKeySignatureStub<OpKey, T1>(d));
@@ -36,8 +36,10 @@ namespace StaticConversionsGenerator
             var r = OpKeySignature(OpKey.Add, 1, 1);
             var t = r.Method.ReturnType;
 
-            var d = new Dictionary<Type, Delegate>();
-            d.Add(r.GetType(), r);
+            var d = new Dictionary<Type, Delegate>
+            {
+                { r.GetType(), r }
+            };
 
             var rs = OpKeySignature(OpKey.Subtract, 1, 1);
             var ts = r.Method.ReturnType;

@@ -11,6 +11,8 @@ namespace StaticConversionsGenerator
 {
     partial class Program
     {
+        
+
         public class MsilIConverteribleTests
         {
             public static void GenerateAndRun()
@@ -25,7 +27,7 @@ namespace StaticConversionsGenerator
                 var il = method.GetMethodBody().GetILAsByteArray();
                 var expected = MsilIConverteribleTests.ILTest();
 
-                var result = MsilIConverteribleTests.ExecuteIl(il, method, ilTestFunc.Method.Module).To<int[]>();
+                var result = MsilTestEngine.ExecuteIl(il, method, ilTestFunc.Method.Module).To<int[]>();
                 bool equals = expected.SequenceEqual(result.To<int[]>());
             }
 
@@ -511,152 +513,7 @@ namespace System.Runtime.ConversionServices.Tests
 
 
 
-            static object ExecuteIl(byte[] msil, object target, Module module, Dictionary<int, object> callArgs = null)
-            {
-                var opCodeLookup = typeof(OpCodes).GetFields(BindingFlags.Public | BindingFlags.Static)
-                    .Select(x => (OpCode)x.GetValue(null))
-                    .ToDictionary(x => (int)x.Value, x => x);
-
-                Stack<object> stack = new Stack<object>();
-                Dictionary<int, object> locals = new Dictionary<int, object>();
-                if (callArgs is null) callArgs = new Dictionary<int, object>();
-                var stream = new MemoryStream(msil);
-                var br = new BinaryReader(stream);
-                int pos = -1;
-                int opcode = 0;
-
-                int arg;
-                Type typeArg;
-                MethodInfo method;
-                ConstructorInfo constructor;
-                OpCode current = OpCodes.Nop;
-                object[] methodArgs = null;
-                object methodResult = null;
-                ParameterInfo[] methodParameters = null;
-                object methodTarget = null;
-
-                Next:
-                opcode = stream.ReadByte();
-                if (opcode == 254)
-                {
-                    opcode <<= 8;
-                    opcode += stream.ReadByte();
-                }
-                current = opCodeLookup[opcode];
-                switch (opcode)
-                {
-                    case 0: //nop
-                        goto Read;
-                    case 6: //ld.loc.0
-                    case 7: //ld.loc.1
-                    case 8: //ld.loc.2
-                    case 9: //ld.loc.3
-                        stack.Push(locals[opcode - 6]); goto Read;
-                    case 10: //stloc.0
-                    case 11: //stloc.1
-                    case 12: //stloc.2
-                    case 13: //stloc.3
-                        locals[opcode - 10] = stack.Pop(); goto Read;
-                    case 17: //ldloc.s
-                        stack.Push(locals[stream.ReadByte()]); goto Read;
-                    case 19: //stloc.s
-                        locals[stream.ReadByte()] = stack.Pop(); goto Read;
-                    case 22: // ldc.i4.0
-                    case 23:
-                    case 24:
-                    case 25:
-                    case 26:
-                    case 27:
-                    case 28:
-                    case 29:
-                    case 30:
-                        stack.Push(opcode - 22); goto Read;
-                    case 37: //dup
-                        stack.Push(stack.Peek()); goto Read;
-                    case 38: //pop
-                        stack.Pop(); goto Read;
-                    case 42: //42
-                        goto Ret;
-                    case 43: //43
-                        arg = stream.ReadByte();
-                        stream.Seek(arg, SeekOrigin.Current);
-                        goto Next;
-                    case 40://call
-                    case 111: //callvirt
-                        arg = br.ReadInt32();
-                        method = (MethodInfo)module.ResolveMethod(arg);
-                        methodParameters = method.GetParameters();
-                        methodArgs = new object[methodParameters.Length];
-                        for (arg = methodArgs.Length - 1; arg > -1; arg--) methodArgs[arg] = stack.Pop();//.To(methodParameters[arg].ParameterType);
-                        methodTarget = method.IsStatic ? null : stack.Pop();
-                        methodResult = method.Invoke(methodTarget, methodArgs);
-                        if (method.ReturnType != typeof(void))
-                            stack.Push(methodResult.To(method.ReturnType));
-                        goto Read;
-                    case 114: //ldstr
-                        arg = br.ReadInt32();
-                        methodResult = module.ResolveString(arg);
-                        stack.Push(methodResult);
-                        goto Read;
-                    case 115: //new obj
-                        arg = br.ReadInt32();
-                        constructor = (ConstructorInfo)module.ResolveMethod(arg);
-                        methodParameters = constructor.GetParameters();
-                        methodArgs = new object[methodParameters.Length];
-                        for (arg = methodArgs.Length - 1; arg > -1; arg--) methodArgs[arg] = stack.Pop();//.To(methodParameters[arg].ParameterType);
-                                                                                                         //methodTarget = target; // constructor.IsStatic ? null : stack.Pop();
-                        methodResult = constructor.Invoke(methodArgs);
-                        stack.Push(methodResult);
-                        goto Read;
-                    case 116: //cast class
-                        arg = br.ReadInt32();
-                        typeArg = module.ResolveType(arg);
-                        methodResult = stack.Pop();
-                        stack.Push(methodResult.To(typeArg));
-                        goto Read;
-                    case 140: /*box*/  //-> nothing need, value on stack is already object arg = br.ReadInt32(); ; var top = stack.Peek();
-                        arg = br.ReadInt32();
-                        typeArg = module.ResolveType(arg);
-                        stack.Push((object)stack.Pop().To(typeArg));
-                        goto Read;
-                    case 141: //new array
-                        arg = br.ReadInt32();
-                        typeArg = module.ResolveType(arg);
-                        methodResult = Array.CreateInstance(typeArg, (int)stack.Pop());
-                        stack.Push(methodResult);
-                        goto Read;
-                    case 154: //ldelem.ref
-                        arg = (int)stack.Pop();
-                        stack.Push(((Array)stack.Pop()).GetValue(arg));
-                        goto Read;
-                    case 162: //stelem.ref
-                        methodResult = stack.Pop();
-                        arg = (int)stack.Pop();
-                        ((Array)stack.Pop()).SetValue(methodResult, arg);
-                        goto Read;
-                    case 165: //unbox any
-                        arg = br.ReadInt32();
-                        typeArg = module.ResolveType(arg);
-                        stack.Push((object)stack.Pop().To(typeArg));
-                        goto Read;
-                    case 208: //ldtoken
-                        arg = br.ReadInt32();
-                        typeArg = module.ResolveType(arg);
-                        stack.Push(typeArg.TypeHandle);
-                        goto Read;
-                    default:
-                        var notImplemented = current;
-                        throw new NotImplementedException();
-                }
-
-                Read:
-                pos++;
-                if (pos < msil.Length)
-                    goto Next;
-                Ret:
-                var result = stack.Count == 0 ? null : stack.Pop();
-                return result;
-            }
+            
             static int[] ILTest()
             {
                 Stack<object> stack = new Stack<object>();
@@ -679,6 +536,7 @@ namespace System.Runtime.ConversionServices.Tests
                 var result = stack.Pop();
                 return (int[])result;
             }
+
             public static void RunConvertTests()
             {
                 Stack<object> stack = new Stack<object>();

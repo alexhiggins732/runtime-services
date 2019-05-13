@@ -6,13 +6,170 @@ using static System.Runtime.ConversionServices.Conversions;
 
 namespace System.Runtime.ConversionServices.Generics.TypeDefintion
 {
+    public class GenericDelegate
+    {
+        public static void Test()
+        {
+            RTGeneric<int> a = 1;
+            RTGeneric<int> b = 2;
+
+            IRtGeneric ia = a;
+            IRtGeneric ib = b;
+
+            var inta = ((int)a);
+            var intb = ((int)b);
+
+
+            var comp = ia.RtCompare(ib);
+            var compba = ib.RtCompare(ia);
+        }
+        public interface IMsil
+        {
+            int OpCmp<T>(T other);
+        }
+        public interface IRtGeneric : IMsil
+        {
+            int RtCompare(IRtGeneric other);
+            //int OpCmp<T>(T other);
+            int OpCmp(IRtGeneric other);
+            int RtCompareFrom<TSource>(RTGeneric<TSource> rTGeneric);
+            int RtCompareFrom2<TSource>(RTGeneric<TSource> rTGeneric);
+            int RtCompareInterfaceCall(IRtGeneric generic);
+        }
+
+        public interface IRuntimeInterface
+        {
+
+        }
+        public interface IRuntimeCompare : IRuntimeInterface { }
+
+        public class RTGeneric<T> : IRtGeneric
+        {
+            public T value;
+            public RTGeneric(T value) => this.value = value;
+
+            // Can't we just
+            public int OpCmp(IRtGeneric other) => other.OpCmp(this.value);
+
+            // We can unbox the generics using the following pattern.
+            //  But requires 4 methods for every operation. 
+            //      1) Non-Generic Interface method.
+            //      2) Handler to accept generic parameters passed from 1.
+            //      3) A call to a static function to extract generics from 1 and 2.
+            //      4) A call to the static handler wired to handle the method for the generic arguments.
+            public int RtCompare(IRtGeneric other) 
+                => other.RtCompareFrom(this);
+            public int RtCompareFrom<TSource>(RTGeneric<TSource> source)
+                => Compare(source, this); // we could eliminate
+            public static int Compare<TSource, T2>(RTGeneric<TSource> tsource, RTGeneric<T2> other) =>
+                GenericComparer<TSource, T2>.Compare(tsource.value, other.value);
+
+            //We can reduce to 3) but would require making the method instance.
+            public int RtCompare2(IRtGeneric other) => other.RtCompareFrom2(this);
+            public int RtCompareFrom2<TSource>(RTGeneric<TSource> source)
+               => GenericComparer<TSource, T>.Compare(source.value, value);
+
+            // Let's introduce another generic parameter representing the operation to be performed.
+            //  Additionally, we will specify T as a second generic parameter and pass IRtGeneric as the third.
+            //      We can let the static GenericInterfaceCall invoke the call back with the necessary parameters.
+            public int RtCompareInterfaceCall(IRtGeneric generic)
+                => RuntimeInterfaceGenericMap<IRuntimeCompare, T, IRtGeneric>.Call(this.value, generic);
+            public int OpCmp<TIn>(TIn tvalue) => GenericComparer<TIn, T>.Compare(tvalue, value);
+
+
+            //Can we get this into single func? and does it work?
+            public int RtCompareWithFunc2(IRtGeneric other)
+                => GenericFuncComparer.Compare(() => value, (x) => other.RtCompareFrom(this));
+
+
+
+           
+
+
+
+            // // BROKE:
+            //=> GenericFuncComparer.CompareFromOther((x) => other.RtCompareFrom(this));
+
+
+            public int RtCompareWithFunc3(IRtGeneric other)
+            {
+                //other.RtCompareFrom(() => value);
+
+                //GenericFuncComparer.CompareFromOther(other, (x) => other.RtCompareFrom);
+                return 1;
+            }
+
+
+
+
+
+
+            public static implicit operator T(RTGeneric<T> generic) => generic.value;
+            public static implicit operator RTGeneric<T>(T value) => new RTGeneric<T>(value);
+        }
+
+        public class RuntimeInterfaceGenericMap<IRuntimeInterface, T, IRtGeneric>
+        {
+            //TODO, how to handle generics?
+            internal static int Call(T value, GenericDelegate.IRtGeneric generic)
+            {
+                return generic.OpCmp<T>(value);
+                //throw new NotImplementedException();
+            }
+        }
+        public class RuntimeInterfaceMap<IRuntimeInterface, T, IRtGeneric>
+        {
+            //TODO, how to handle generics?
+            internal static int Call(T value, GenericDelegate.IRtGeneric generic)
+                => generic.OpCmp<T>(value);
+        }
+        public class RuntimeInterfaces<TInterfaceType>
+        {
+            //TODO: TInterfaceType to implementation.
+            public static void Call<T1, T2>(T1 t1, T2 t2) => GenericComparer<T1, T2>.Compare(t1, t2);
+        }
+
+
+
+
+        public class GenericFuncComparer
+        {
+            internal static int Compare<T>(Func<T> p, Func<Func<T>, int> del)
+            {
+                return del(p);
+            }
+            internal static int Compare<T>(
+                Func<RTGeneric<T>> source, 
+                Func<IRtGeneric> other, 
+                Func<IRtGeneric, Func<RTGeneric<T>>, int> del)
+            {
+                var withoutCallBack = (other().RtCompare(source()));
+                return (other().RtCompare(source()));
+            }
+
+        }
+
+
+
+
+        public class GenericComparer<T1, T2>
+        {
+            public static int CompareDebug(T1 a, T2 b)
+            {
+                var inta = (int)(object)a;
+                var intb = (int)(object)b;
+                return inta.CompareTo(intb);
+            }
+            public static int Compare(T1 a, T2 b) => ((int)(object)a).CompareTo((int)(object)b);
+        }
+    }
     public class GenericMethodTest
     {
         public class Fn<T> : IFn
         {
             public Func<T> fn;
             public Fn(Func<T> fn) => this.fn = fn;
-   
+
         }
         public class Fn0<T> : IFn0
         {

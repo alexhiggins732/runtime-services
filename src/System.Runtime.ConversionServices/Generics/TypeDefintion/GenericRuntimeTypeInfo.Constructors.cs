@@ -27,7 +27,7 @@ namespace System.Runtime.ConversionServices
         /// <summary>
         /// Internal method to load constructors declared on the the specified type.
         /// </summary>
-        private void loadConstructors()
+        private void LoadConstructors()
         {
             //TODO: Check for default constructor here once.
             PublicConstructors = new List<PublicConstructorDefinition<T>>();
